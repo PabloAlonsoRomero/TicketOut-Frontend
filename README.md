@@ -1,11 +1,11 @@
 # TicketsOut (Sistema de Gestión Simple) - Frontend 
 
 ### 🫂 Integrantes
-José de Jesús Almanza Contreras -> Product Owner
-Pablo Emilio Alonso Romero -> Scrum Master
-Josué Amador Ynfante -> Development Team
-Victor Hassiel Avila Monjaraz -> Development Team
-Leonardo Gael Durán Torres -> Development Team
+- José de Jesús Almanza Contreras -> Product Owner
+- Pablo Emilio Alonso Romero -> Scrum Master
+- Josué Amador Ynfante -> Development Team
+- Victor Hassiel Avila Monjaraz -> Development Team
+- Leonardo Gael Durán Torres -> Development Team
 
 ---
 
