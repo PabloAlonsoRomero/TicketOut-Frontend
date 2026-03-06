@@ -1,0 +1,145 @@
+<div class="dashboard-wrapper d-flex min-vh-100">
+  <!-- Sidebar -->
+  <aside class="sidebar bg-white border-end p-3 d-flex flex-column shadow-sm">
+    <div class="sidebar-header mb-4 p-2 d-flex align-items-center border rounded">
+      <div class="avatar bg-light border rounded-circle me-2 d-flex align-items-center justify-content-center">
+        <i class="bi bi-person fs-4"></i>
+      </div>
+      <div class="user-info overflow-hidden">
+        <h6 class="mb-0 text-truncate">{{ userName }}</h6>
+        <small class="text-muted text-truncate">{{ userRole }}</small>
+      </div>
+      <i class="bi bi-chevron-down ms-auto text-muted small"></i>
+    </div>
+
+    <nav class="nav flex-column flex-grow-1">
+      <a class="nav-link active d-flex align-items-center mb-2" href="#">
+        <i class="bi bi-grid-fill me-2 fs-5"></i> Dashboard
+      </a>
+      <a class="nav-link d-flex align-items-center mb-2" href="#">
+        <i class="bi bi-ticket-perforated me-2 fs-5"></i> Tickets
+        <span class="badge rounded-pill bg-dark ms-auto">12</span>
+      </a>
+      <a class="nav-link d-flex align-items-center mb-2" href="#">
+        <i class="bi bi-people me-2 fs-5"></i> Users
+      </a>
+      <a class="nav-link d-flex align-items-center mb-2" href="#">
+        <i class="bi bi-file-earmark-text me-2 fs-5"></i> Reports
+      </a>
+      <a class="nav-link d-flex align-items-center mb-2" href="#">
+        <i class="bi bi-gear me-2 fs-5"></i> Settings
+      </a>
+    </nav>
+
+    <div class="sidebar-footer mt-auto pt-3 border-top">
+      <button class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center" (click)="logout()">
+        <i class="bi bi-box-arrow-right me-2"></i> Cerrar Sesión
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <div class="main-content flex-grow-1 bg-light p-4 overflow-auto">
+    <!-- Top Header -->
+    <header class="d-flex justify-content-between align-items-center mb-4">
+      <div class="search-box position-relative w-25">
+        <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+        <input type="text" class="form-control rounded-pill ps-5 border" placeholder="Search...">
+      </div>
+      <div class="header-actions d-flex align-items-center">
+        <i class="bi bi-bell fs-5 me-4 text-muted pointer"></i>
+        <div class="avatar bg-white border rounded-circle d-flex align-items-center justify-content-center w-40 h-40 shadow-sm pointer">
+          <i class="bi bi-person fs-4"></i>
+        </div>
+      </div>
+    </header>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="mb-0 fw-bold">Dashboard</h2>
+      <button class="btn btn-dark px-4 py-2">Create New Ticket</button>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row g-4 mb-4">
+      <div class="col-md-3" *ngFor="let card of [
+        { label: 'Total Tickets', value: '154', graph: true },
+        { label: 'Open Tickets', value: '45', graph: true },
+        { label: 'Resolved Tickets', value: '102', graph: true },
+        { label: 'Avg. Response Time', value: '2h 15m', graph: true }
+      ]">
+        <div class="card border-0 shadow-sm p-3 h-100">
+          <small class="text-muted mb-2 d-block">{{ card.label }}</small>
+          <div class="d-flex align-items-end justify-content-between">
+            <h3 class="mb-0 fw-bold">{{ card.value }}</h3>
+            <!-- Placeholder for mini graph -->
+            <div class="mini-graph" *ngIf="card.graph">
+              <svg width="80" height="30" viewBox="0 0 80 30" fill="none">
+                <path d="M2 28 C 10 20, 20 25, 30 15 C 40 5, 50 20, 60 10 S 70 5, 78 12" stroke="#333" stroke-width="2" stroke-linecap="round" fill="none"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tickets List Table -->
+    <div class="card border-0 shadow-sm p-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="mb-0 fw-bold">Recent Tickets List</h5>
+        <div class="filters d-flex gap-2">
+          <button class="btn btn-outline-secondary btn-sm dropdown-toggle">Filter: Status</button>
+          <button class="btn btn-outline-secondary btn-sm dropdown-toggle">Priority</button>
+          <button class="btn btn-outline-secondary btn-sm dropdown-toggle">Assignee</button>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead class="bg-light">
+            <tr>
+              <th class="border-0 border-bottom">Ticket ID</th>
+              <th class="border-0 border-bottom">Subject</th>
+              <th class="border-0 border-bottom">Requester</th>
+              <th class="border-0 border-bottom">Status</th>
+              <th class="border-0 border-bottom">Priority</th>
+              <th class="border-0 border-bottom">Created</th>
+              <th class="border-0 border-bottom">Assignee</th>
+              <th class="border-0 border-bottom"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let ticket of tickets">
+              <td class="text-secondary fw-bold">{{ ticket.id }}</td>
+              <td class="fw-semibold">{{ ticket.subject }}</td>
+              <td>{{ ticket.requester }}</td>
+              <td>
+                <span class="badge status-pill" [ngClass]="{
+                  'bg-warning-subtle text-warning border border-warning': ticket.status === 'Open',
+                  'bg-primary-subtle text-primary border border-primary': ticket.status === 'In Progress',
+                  'bg-success-subtle text-success border border-success': ticket.status === 'Resolved'
+                }">{{ ticket.status }}</span>
+              </td>
+              <td>
+                <span class="badge priority-pill border text-dark" [ngClass]="{
+                  'border-danger': ticket.priority === 'Urgent' || ticket.priority === 'High',
+                  'border-warning': ticket.priority === 'Medium',
+                  'border-secondary': ticket.priority === 'Low'
+                }">{{ ticket.priority }}</span>
+              </td>
+              <td class="text-muted small">{{ ticket.created }}</td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="assignee-avatar bg-light border rounded-circle me-2 d-flex align-items-center justify-content-center">
+                    <i class="bi bi-x fs-5"></i>
+                  </div>
+                  <span>{{ ticket.assignee }}</span>
+                </div>
+              </td>
+              <td><i class="bi bi-three-dots pointer"></i></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
