@@ -1,0 +1,118 @@
+/* src/app/features/dashboard/dashboard.component.css */
+
+.dashboard-wrapper {
+  background-color: #f8f9fa;
+  font-family: 'Inter', sans-serif;
+}
+
+.sidebar {
+  width: 280px;
+  min-width: 280px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.nav-link {
+  color: #495057;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.nav-link:hover, .nav-link.active {
+  background-color: #f1f3f5;
+  color: #212529;
+}
+
+.nav-link.active {
+  background-color: #e9ecef;
+  font-weight: 600;
+}
+
+.main-content {
+  background-color: #f4f6f8;
+}
+
+.search-box .form-control {
+  border: 1px solid #dee2e6;
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+}
+
+.search-box .form-control:focus {
+  box-shadow: 0 0 0 0.15rem rgba(0,0,0,0.05);
+  border-color: #ced4da;
+}
+
+.card {
+  border-radius: 12px;
+}
+
+.mini-graph svg path {
+  fill: none;
+  stroke: #333;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.status-pill {
+  font-size: 0.75rem;
+  padding: 0.4rem 0.8rem;
+  font-weight: 600;
+  border-radius: 6px;
+}
+
+.priority-pill {
+  font-size: 0.75rem;
+  padding: 0.35rem 0.7rem;
+  background-color: white;
+  color: #333 !important;
+  font-weight: 500;
+  border-radius: 6px;
+}
+
+.assignee-avatar {
+  width: 32px;
+  height: 32px;
+  background-color: #e9ecef;
+  color: #adb5bd;
+}
+
+.w-40 { width: 40px; }
+.h-40 { height: 40px; }
+.pointer { cursor: pointer; }
+
+/* Custom Colors from Bootstrap */
+.bg-warning-subtle { background-color: #fff3cd !important; }
+.bg-primary-subtle { background-color: #cfe2ff !important; }
+.bg-success-subtle { background-color: #d1e7dd !important; }
+
+.table thead th {
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: #6c757d;
+}
+
+.table tbody td {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  border: none;
+}
+
+.btn-dark {
+  background-color: #212529;
+  border-radius: 8px;
+  font-weight: 500;
+}
