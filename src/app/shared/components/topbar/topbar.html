@@ -1,0 +1,44 @@
+<header class="bg-white border-bottom shadow-sm">
+  <div class="container-fluid">
+    <div class="d-flex align-items-center justify-content-between py-2">
+      <!-- Search Bar -->
+      <div class="d-flex align-items-center flex-grow-1 me-3" style="max-width: 400px;">
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0">
+            <i class="bi bi-search text-muted"></i>
+          </span>
+          <input type="text"
+                 class="form-control bg-light border-start-0"
+                 placeholder="Buscar tickets, usuarios..."
+                 style="border-left: none; box-shadow: none;">
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="d-flex align-items-center gap-3">
+        <!-- User Menu -->
+        <div class="dropdown">
+          <button class="btn btn-link text-decoration-none d-flex align-items-center p-0"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false">
+            <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-2"
+                 style="width: 32px; height: 32px;">
+              <i class="bi bi-person-fill text-primary"></i>
+            </div>
+            <span class="text-dark fw-medium">{{ userName }}</span>
+            <i class="bi bi-chevron-down ms-1 text-muted"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Perfil</a></li>
+            <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Ajustes</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="#" (click)="logout()">
+              <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
+            </a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
