@@ -1,0 +1,190 @@
+<div class="dashboard-wrapper">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <i class="bi bi-ticket-perforated-fill brand-icon"></i>
+      <span class="brand-name">TicketOut</span>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">
+        <i class="bi bi-person-fill"></i>
+      </div>
+      <div class="user-info">
+        <span class="user-name">{{ userName }}</span>
+        <span class="user-role">{{ userRole }}</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-link active" routerLink="/dashboard">
+        <i class="bi bi-grid-1x2-fill"></i>
+        <span>Dashboard</span>
+      </a>
+      <a class="sidebar-link" href="#">
+        <i class="bi bi-people"></i>
+        <span>Usuarios</span>
+      </a>
+      <a class="sidebar-link" href="#">
+        <i class="bi bi-bar-chart-line"></i>
+        <span>Reportes</span>
+      </a>
+      <a class="sidebar-link" href="#">
+        <i class="bi bi-gear"></i>
+        <span>Ajustes</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" (click)="logout()">
+        <i class="bi bi-box-arrow-right"></i>
+        <span>Cerrar Sesión</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-area">
+    <!-- Top Bar -->
+    <header class="top-bar">
+      <div class="search-wrap">
+        <i class="bi bi-search search-icon"></i>
+        <input type="text" class="search-input" placeholder="Buscar tickets...">
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn">
+          <i class="bi bi-bell"></i>
+        </button>
+        <div class="header-avatar">
+          <i class="bi bi-person-fill"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <div class="page-content container-fluid">
+      @if (ticket) {
+        <div class="row mb-4">
+          <div class="col-12">
+            <h1 class="page-title h3 mb-1">Ticket Details: #{{ ticket.id }} - {{ ticket.title }}</h1>
+          </div>
+        </div>
+
+        <div class="row g-4">
+          <!-- Ticket Information -->
+          <div class="col-lg-4">
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+              <div class="card-body p-4">
+                <h5 class="card-title fw-bold mb-4">Ticket Information</h5>
+
+                <div class="info-group mb-3">
+                  <label class="text-muted small fw-bold text-uppercase mb-1 d-block">Ticket ID</label>
+                  <div class="p-2 bg-light rounded border text-secondary">TKT-{{ ticket.id }}</div>
+                </div>
+
+                <div class="info-group mb-3">
+                  <label class="text-muted small fw-bold text-uppercase mb-1 d-block">Status</label>
+                  <div class="badge p-2 w-100" [ngClass]="{
+                    'bg-warning-subtle text-warning-emphasis': ticket.status === 'OPEN',
+                    'bg-primary-subtle text-primary-emphasis': ticket.status === 'IN_PROGRESS',
+                    'bg-success-subtle text-success-emphasis': ticket.status === 'RESOLVED'
+                  }">{{ ticket.status }}</div>
+                </div>
+
+                <div class="info-group mb-3">
+                  <label class="text-muted small fw-bold text-uppercase mb-1 d-block">Category</label>
+                  <div class="p-2 bg-light rounded border text-secondary">{{ ticket.category }}</div>
+                </div>
+
+                <div class="info-group mb-3">
+                  <label class="text-muted small fw-bold text-uppercase mb-1 d-block">Priority</label>
+                  <div class="badge p-2 w-100" [ngClass]="{
+                    'bg-danger-subtle text-danger-emphasis': ticket.priority === 'URGENT' || ticket.priority === 'HIGH',
+                    'bg-warning-subtle text-warning-emphasis': ticket.priority === 'MEDIUM',
+                    'bg-secondary-subtle text-secondary-emphasis': ticket.priority === 'LOW'
+                  }">{{ ticket.priority }}</div>
+                </div>
+
+                <div class="info-group mb-3">
+                  <label class="text-muted small fw-bold text-uppercase mb-1 d-block">Created</label>
+                  <div class="p-2 bg-light rounded border text-secondary small">{{ ticket.createdAt | date:'medium' }}</div>
+                </div>
+
+                <div class="info-group mb-3">
+                  <label class="text-muted small fw-bold text-uppercase mb-1 d-block">Created By</label>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="avatar-sm bg-secondary-subtle rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                      <i class="bi bi-person h6 mb-0"></i>
+                    </div>
+                    <span class="small fw-semibold text-secondary">{{ ticket.createdBy.name }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Description & Comments -->
+          <div class="col-lg-8">
+            <div class="d-flex flex-column gap-4">
+              <!-- Description -->
+              <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4">
+                  <h5 class="card-title fw-bold mb-3">Description</h5>
+                  <div class="p-4 bg-light rounded-4 border text-secondary" style="min-height: 150px; line-height: 1.6;">
+                    {{ ticket.description }}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Admin Comments -->
+              <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4">
+                  <h5 class="card-title fw-bold mb-4">Comments</h5>
+
+                  <!-- Add Comment -->
+                  <div class="mb-4">
+                    <div class="input-group">
+                      <input type="text" class="form-control rounded-start-4 border-end-0 border-2" placeholder="Add a comment or internal note...">
+                      <button class="btn btn-warning rounded-end-4 px-4 fw-bold text-white border-2 border-start-0" type="button">Post</button>
+                    </div>
+                  </div>
+
+                  <!-- Comment List -->
+                  <div class="d-flex flex-column gap-3">
+                    @for (comment of ticket.comments; track comment.id) {
+                      <div class="comment-item p-3 border rounded-4 bg-light">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                          <div class="avatar-xs bg-white rounded-circle d-flex align-items-center justify-content-center border" style="width: 24px; height: 24px;">
+                            <i class="bi bi-person small"></i>
+                          </div>
+                          <span class="fw-bold small">{{ comment.author.name }}</span>
+                          <span class="text-muted small ms-auto">{{ comment.createdAt | date:'short' }}</span>
+                        </div>
+                        <p class="mb-0 small text-secondary">{{ comment.body }}</p>
+                        @if (comment.isInternal) {
+                          <span class="badge bg-danger-subtle text-danger border border-danger-subtle mt-2 fw-bold" style="font-size: 0.65rem;">INTERNAL NOTE</span>
+                        }
+                      </div>
+                    } @empty {
+                      <div class="text-center py-4 text-muted small">
+                        <i class="bi bi-chat-dots d-block h2 mb-2 opacity-25"></i>
+                        No comments yet.
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      } @else {
+        <div class="d-flex justify-content-center align-items-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <span class="ms-2 text-muted">Cargando detalles del ticket...</span>
+        </div>
+      }
+    </div>
+  </div>
+</div>
