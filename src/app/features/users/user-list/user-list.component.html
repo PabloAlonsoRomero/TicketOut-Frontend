@@ -1,0 +1,154 @@
+<div class="dashboard-wrapper">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <i class="bi bi-ticket-perforated-fill brand-icon"></i>
+      <span class="brand-name">TicketOut</span>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">
+        <i class="bi bi-person-fill"></i>
+      </div>
+      <div class="user-info">
+        <span class="user-name">{{ userName }}</span>
+        <span class="user-role">{{ userRole }}</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-link" routerLink="/dashboard">
+        <i class="bi bi-grid-1x2-fill"></i>
+        <span>Dashboard</span>
+      </a>
+      <a class="sidebar-link active" routerLink="/dashboard/users">
+        <i class="bi bi-people"></i>
+        <span>Usuarios</span>
+      </a>
+      <a class="sidebar-link" href="#">
+        <i class="bi bi-bar-chart-line"></i>
+        <span>Reportes</span>
+      </a>
+      <a class="sidebar-link" href="#">
+        <i class="bi bi-gear"></i>
+        <span>Ajustes</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" (click)="logout()">
+        <i class="bi bi-box-arrow-right"></i>
+        <span>Cerrar Sesión</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-area">
+    <!-- Top Bar -->
+    <header class="top-bar">
+      <div class="search-wrap">
+        <i class="bi bi-search search-icon"></i>
+        <input type="text" class="search-input" placeholder="Buscar usuarios...">
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn">
+          <i class="bi bi-bell"></i>
+        </button>
+        <div class="header-avatar">
+          <i class="bi bi-person-fill"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <div class="page-content container-fluid">
+      <div class="page-title-row d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h1 class="page-title h3 mb-1">Gestión de Usuarios</h1>
+        </div>
+        <button class="action-btn">
+          <i class="bi bi-person-plus-fill"></i>
+          Crear Nuevo Usuario
+        </button>
+      </div>
+
+      <!-- Filters Row -->
+      <div class="table-card p-3 mb-4 bg-white rounded-4 shadow-sm">
+        <div class="d-flex gap-2 flex-wrap">
+          <button class="filter-btn">
+            <i class="bi bi-funnel"></i> Rol <i class="bi bi-chevron-down ms-1"></i>
+          </button>
+          <button class="filter-btn">
+             Prioridad <i class="bi bi-chevron-down ms-1"></i>
+          </button>
+          <button class="filter-btn">
+             Asignado <i class="bi bi-chevron-down ms-1"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Users Table -->
+      <div class="table-card bg-white rounded-4 shadow-sm overflow-hidden">
+        <div class="table-responsive">
+          <table class="data-table mb-0">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Rol</th>
+                <th>Acciones</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (user of users; track user.id) {
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center gap-3">
+                      <div class="avatar-sm bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                        <i class="bi bi-person text-secondary"></i>
+                      </div>
+                      <span class="fw-semibold">{{ user.name || user.username }}</span>
+                    </div>
+                  </td>
+                  <td class="text-secondary">{{ user.email }}</td>
+                  <td>
+                    <span class="badge" [ngClass]="{
+                      'bg-primary-subtle text-primary border border-primary-subtle': user.role === 'ADMIN' || user.role === 'SUPERUSER',
+                      'bg-light text-secondary border': user.role === 'USER'
+                    }">{{ user.role }}</span>
+                  </td>
+                  <td>
+                    <div class="d-flex gap-2">
+                      <button class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1 px-3 rounded-3">
+                        <i class="bi bi-pencil"></i> Editar
+                      </button>
+                      <button class="btn btn-sm btn-outline-danger d-flex align-items-center gap-1 px-3 rounded-3">
+                        <i class="bi bi-trash"></i> Eliminar
+                      </button>
+                    </div>
+                  </td>
+                  <td>
+                    <button class="icon-btn-sm border-0 bg-transparent">
+                      <i class="bi bi-three-dots"></i>
+                    </button>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="5" class="text-center py-5">
+                    <div class="text-muted">
+                      <i class="bi bi-people fs-1 d-block mb-2 opacity-25"></i>
+                      No hay usuarios para mostrar.
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
