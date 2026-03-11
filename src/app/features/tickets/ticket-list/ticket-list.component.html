@@ -1,0 +1,164 @@
+<!-- Page Header -->
+<div class="page-title-row d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h1 class="page-title h3 mb-1">Gestión de Incidencias</h1>
+          <p class="text-muted mb-0 small">{{ filteredTickets.length }} ticket{{ filteredTickets.length !== 1 ? 's' : '' }} encontrado{{ filteredTickets.length !== 1 ? 's' : '' }}</p>
+        </div>
+        <button class="action-btn" (click)="createTicket()">
+          <i class="bi bi-plus-lg me-1"></i>
+          Nuevo Ticket
+        </button>
+      </div>
+
+      <!-- Filters Row -->
+      <div class="table-card p-3 mb-4 bg-white rounded-4 shadow-sm">
+        <div class="d-flex gap-2 flex-wrap align-items-center">
+          <i class="bi bi-funnel text-secondary"></i>
+
+          <!-- Status Filter -->
+          <select
+            class="filter-select"
+            [(ngModel)]="statusFilter"
+            (change)="applyFilters()"
+          >
+            <option value="">Todos los estados</option>
+            @for (s of statuses; track s) {
+              <option [value]="s">{{ statusLabels[s] }}</option>
+            }
+          </select>
+
+          <!-- Priority Filter -->
+          <select
+            class="filter-select"
+            [(ngModel)]="priorityFilter"
+            (change)="applyFilters()"
+          >
+            <option value="">Todas las prioridades</option>
+            @for (p of priorities; track p) {
+              <option [value]="p">{{ priorityLabels[p] }}</option>
+            }
+          </select>
+
+          @if (statusFilter || priorityFilter || searchQuery) {
+            <button class="filter-clear-btn" (click)="clearFilters()">
+              <i class="bi bi-x-lg me-1"></i> Limpiar filtros
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Tickets Table -->
+      <div class="table-card bg-white rounded-4 shadow-sm overflow-hidden">
+        <div class="table-responsive">
+          <table class="data-table mb-0">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Asunto</th>
+                <th>Categoría</th>
+                <th>Estado</th>
+                <th>Prioridad</th>
+                <th>Creador</th>
+                <th>Asignado</th>
+                <th>Creado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (ticket of filteredTickets; track ticket.id) {
+                <tr class="ticket-row" (click)="viewTicket(ticket)">
+                  <td>
+                    <span class="ticket-id">TKT-{{ ticket.id }}</span>
+                  </td>
+                  <td>
+                    <span class="fw-semibold">{{ ticket.title }}</span>
+                  </td>
+                  <td>
+                    <span class="text-secondary">{{ ticket.category || '—' }}</span>
+                  </td>
+                  <td>
+                    <span class="status-badge" [ngClass]="{
+                      'status-open': ticket.status === 'OPEN',
+                      'status-in-progress': ticket.status === 'IN_PROGRESS',
+                      'status-waiting': ticket.status === 'WAITING_USER',
+                      'status-resolved': ticket.status === 'RESOLVED',
+                      'status-closed': ticket.status === 'CLOSED'
+                    }">
+                      {{ statusLabels[ticket.status] }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="priority-badge" [ngClass]="{
+                      'priority-low': ticket.priority === 'LOW',
+                      'priority-medium': ticket.priority === 'MEDIUM',
+                      'priority-high': ticket.priority === 'HIGH',
+                      'priority-urgent': ticket.priority === 'URGENT'
+                    }">
+                      {{ priorityLabels[ticket.priority] }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="avatar-sm">
+                        <i class="bi bi-person text-secondary"></i>
+                      </div>
+                      <span>{{ ticket.createdBy?.name || ticket.createdBy?.username || '—' }}</span>
+                    </div>
+                  </td>
+                  <td>
+                    @if (ticket.assignedTo) {
+                      <div class="d-flex align-items-center gap-2">
+                        <div class="avatar-sm">
+                          <i class="bi bi-person-fill text-primary"></i>
+                        </div>
+                        <span>{{ ticket.assignedTo.name || ticket.assignedTo.username }}</span>
+                      </div>
+                    } @else {
+                      <span class="text-muted fst-italic">Sin asignar</span>
+                    }
+                  </td>
+                  <td>
+                    <span class="text-secondary small">{{ ticket.createdAt | date:'dd/MM/yyyy' }}</span>
+                  </td>
+                  <td>
+                    <div class="d-flex gap-1" (click)="$event.stopPropagation()">
+                      <button
+                        class="icon-btn-sm"
+                        title="Ver detalle"
+                        (click)="viewTicket(ticket)"
+                      >
+                        <i class="bi bi-eye"></i>
+                      </button>
+                      <button
+                        class="icon-btn-sm"
+                        title="Editar"
+                        (click)="editTicket(ticket)"
+                      >
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="9" class="text-center py-5">
+                    <div class="empty-state">
+                      <i class="bi bi-ticket-detailed fs-1 d-block mb-2 opacity-25"></i>
+                      <p class="text-muted mb-1">No hay tickets para mostrar.</p>
+                      @if (statusFilter || priorityFilter || searchQuery) {
+                        <button class="btn btn-sm btn-outline-primary mt-2" (click)="clearFilters()">
+                          Limpiar filtros
+                        </button>
+                      } @else {
+                        <button class="btn btn-sm btn-outline-primary mt-2" (click)="createTicket()">
+                          <i class="bi bi-plus-lg me-1"></i> Crear primer ticket
+                        </button>
+                      }
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
