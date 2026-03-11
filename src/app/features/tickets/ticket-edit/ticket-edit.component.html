@@ -1,0 +1,167 @@
+@if (loading) {
+  <div class="d-flex justify-content-center align-items-center py-5">
+    <div class="spinner-border text-secondary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <span class="ms-3 text-muted">Cargando ticket...</span>
+  </div>
+} @else if (ticket) {
+  <!-- Page Header -->
+  <div class="page-title-row d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="page-title">Editar Ticket <span class="ticket-id-title">TKT-{{ ticket.id }}</span></h1>
+      <p class="page-subtitle">Modifica la información de la incidencia</p>
+    </div>
+    <button class="btn-back" routerLink="/tickets">
+      <i class="bi bi-arrow-left me-1"></i>
+      Volver al listado
+    </button>
+  </div>
+
+  <div class="edit-layout">
+    <!-- Left Column: Form -->
+    <div class="form-card">
+      <form (ngSubmit)="onSubmit()">
+
+        <!-- Title (readonly) -->
+        <div class="form-group">
+          <label class="form-label" for="title">Asunto</label>
+          <input
+            type="text"
+            id="title"
+            class="form-control-custom"
+            [(ngModel)]="title"
+            name="title"
+            readonly
+          >
+        </div>
+
+        <!-- Status & Priority Row -->
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label class="form-label" for="status">Estado</label>
+            <select
+              id="status"
+              class="form-control-custom"
+              [(ngModel)]="updateData.status"
+              name="status"
+            >
+              @for (s of statuses; track s) {
+                <option [value]="s">{{ statusLabels[s] }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group flex-1">
+            <label class="form-label" for="priority">Prioridad</label>
+            <select
+              id="priority"
+              class="form-control-custom"
+              [(ngModel)]="updateData.priority"
+              name="priority"
+            >
+              @for (p of priorities; track p) {
+                <option [value]="p">{{ priorityLabels[p] }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <!-- Category -->
+        <div class="form-group">
+          <label class="form-label" for="category">Categoría</label>
+          <select
+            id="category"
+            class="form-control-custom"
+            [(ngModel)]="updateData.category"
+            name="category"
+          >
+            <option value="">Sin categoría</option>
+            @for (cat of categories; track cat) {
+              <option [value]="cat">{{ cat }}</option>
+            }
+          </select>
+        </div>
+
+        <!-- Description (readonly) -->
+        <div class="form-group">
+          <label class="form-label" for="description">Descripción</label>
+          <textarea
+            id="description"
+            class="form-control-custom textarea"
+            [(ngModel)]="description"
+            name="description"
+            rows="5"
+            readonly
+          ></textarea>
+        </div>
+
+        <!-- Actions -->
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" (click)="cancel()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn-submit" [disabled]="submitting">
+            @if (submitting) {
+              <span class="spinner"></span>
+              Guardando...
+            } @else {
+              <i class="bi bi-check-lg me-1"></i>
+              Guardar Cambios
+            }
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- Right Column: Info -->
+    <div class="info-card">
+      <h6 class="info-card-title">Información del Ticket</h6>
+
+      <div class="info-item">
+        <span class="info-label">ID</span>
+        <span class="info-value ticket-id">TKT-{{ ticket.id }}</span>
+      </div>
+
+      <div class="info-item">
+        <span class="info-label">Creado por</span>
+        <div class="info-user">
+          <div class="avatar-sm">
+            <i class="bi bi-person-fill"></i>
+          </div>
+          <span>{{ ticket.createdBy?.name || ticket.createdBy?.username }}</span>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <span class="info-label">Fecha de creación</span>
+        <span class="info-value">{{ ticket.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+
+      <div class="info-item">
+        <span class="info-label">Última actualización</span>
+        <span class="info-value">{{ ticket.updatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+
+      @if (ticket.assignedTo) {
+        <div class="info-item">
+          <span class="info-label">Asignado a</span>
+          <div class="info-user">
+            <div class="avatar-sm accent">
+              <i class="bi bi-person-fill"></i>
+            </div>
+            <span>{{ ticket.assignedTo.name || ticket.assignedTo.username }}</span>
+          </div>
+        </div>
+      }
+
+      @if (ticket.closedAt) {
+        <div class="info-item">
+          <span class="info-label">Cerrado</span>
+          <span class="info-value">{{ ticket.closedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+      }
+    </div>
+  </div>
+}
