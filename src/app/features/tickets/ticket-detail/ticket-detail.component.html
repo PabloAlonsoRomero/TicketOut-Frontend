@@ -1,190 +1,242 @@
-<div class="dashboard-wrapper">
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="sidebar-brand">
-      <i class="bi bi-ticket-perforated-fill brand-icon"></i>
-      <span class="brand-name">TicketOut</span>
+@if (loading) {
+  <div class="d-flex justify-content-center align-items-center py-5">
+    <div class="spinner-border text-secondary" role="status">
+      <span class="visually-hidden">Cargando...</span>
     </div>
-
-    <div class="sidebar-user">
-      <div class="user-avatar">
-        <i class="bi bi-person-fill"></i>
-      </div>
-      <div class="user-info">
-        <span class="user-name">{{ userName }}</span>
-        <span class="user-role">{{ userRole }}</span>
-      </div>
+    <span class="ms-3 text-muted">Cargando ticket...</span>
+  </div>
+} @else if (ticket) {
+  <!-- Page Header -->
+  <div class="page-title-row">
+    <div>
+      <h1 class="page-title">
+        <span class="ticket-id-title">TKT-{{ ticket.id }}</span>
+        {{ ticket.title }}
+      </h1>
+      <p class="page-subtitle">Detalle completo de la incidencia</p>
     </div>
-
-    <nav class="sidebar-nav">
-      <a class="sidebar-link active" routerLink="/dashboard">
-        <i class="bi bi-grid-1x2-fill"></i>
-        <span>Dashboard</span>
-      </a>
-      <a class="sidebar-link" href="#">
-        <i class="bi bi-people"></i>
-        <span>Usuarios</span>
-      </a>
-      <a class="sidebar-link" href="#">
-        <i class="bi bi-bar-chart-line"></i>
-        <span>Reportes</span>
-      </a>
-      <a class="sidebar-link" href="#">
-        <i class="bi bi-gear"></i>
-        <span>Ajustes</span>
-      </a>
-    </nav>
-
-    <div class="sidebar-footer">
-      <button class="logout-btn" (click)="logout()">
-        <i class="bi bi-box-arrow-right"></i>
-        <span>Cerrar Sesión</span>
+    <div class="header-actions">
+      <button class="btn-back" (click)="goBack()">
+        <i class="bi bi-arrow-left me-1"></i>
+        Volver
+      </button>
+      <button class="btn-edit" (click)="editTicket()">
+        <i class="bi bi-pencil me-1"></i>
+        Editar
       </button>
     </div>
-  </aside>
+  </div>
 
-  <!-- Main Content -->
-  <div class="main-area">
-    <!-- Top Bar -->
-    <header class="top-bar">
-      <div class="search-wrap">
-        <i class="bi bi-search search-icon"></i>
-        <input type="text" class="search-input" placeholder="Buscar tickets...">
-      </div>
-      <div class="top-actions">
-        <button class="icon-btn">
-          <i class="bi bi-bell"></i>
-        </button>
-        <div class="header-avatar">
-          <i class="bi bi-person-fill"></i>
-        </div>
-      </div>
-    </header>
+  <div class="detail-layout">
+    <!-- Left Column: Description + Comments -->
+    <div class="left-column">
 
-    <!-- Page Content -->
-    <div class="page-content container-fluid">
-      @if (ticket) {
-        <div class="row mb-4">
-          <div class="col-12">
-            <h1 class="page-title h3 mb-1">Ticket Details: #{{ ticket.id }} - {{ ticket.title }}</h1>
+      <!-- Description -->
+      <div class="content-card">
+        <h6 class="card-section-title">
+          <i class="bi bi-file-text me-2"></i>Descripción
+        </h6>
+        <div class="description-body">{{ ticket.description }}</div>
+      </div>
+
+      <!-- Comments -->
+      <div class="content-card">
+        <h6 class="card-section-title">
+          <i class="bi bi-chat-dots me-2"></i>Comentarios
+          <span class="comment-count">{{ comments.length }}</span>
+        </h6>
+
+        <!-- Add Comment Form -->
+        <div class="comment-form">
+          <div class="comment-input-row">
+            <div class="avatar-comment">
+              <i class="bi bi-person-fill"></i>
+            </div>
+            <textarea
+              class="comment-input"
+              [(ngModel)]="newComment"
+              placeholder="Escribe un comentario..."
+              rows="3"
+            ></textarea>
+          </div>
+          <div class="comment-actions">
+            <label class="internal-check">
+              <input type="checkbox" [(ngModel)]="isInternalNote">
+              <span class="check-label">
+                <i class="bi bi-lock-fill me-1"></i>Nota interna
+              </span>
+            </label>
+            <button
+              class="btn-comment"
+              (click)="addComment()"
+              [disabled]="!newComment.trim() || submittingComment"
+            >
+              @if (submittingComment) {
+                <span class="spinner-sm"></span>
+              } @else {
+                <i class="bi bi-send-fill me-1"></i>
+              }
+              Enviar
+            </button>
           </div>
         </div>
 
-        <div class="row g-4">
-          <!-- Ticket Information -->
-          <div class="col-lg-4">
-            <div class="card shadow-sm border-0 rounded-4 h-100">
-              <div class="card-body p-4">
-                <h5 class="card-title fw-bold mb-4">Ticket Information</h5>
-
-                <div class="info-group mb-3">
-                  <label class="text-muted small fw-bold text-uppercase mb-1 d-block">Ticket ID</label>
-                  <div class="p-2 bg-light rounded border text-secondary">TKT-{{ ticket.id }}</div>
-                </div>
-
-                <div class="info-group mb-3">
-                  <label class="text-muted small fw-bold text-uppercase mb-1 d-block">Status</label>
-                  <div class="badge p-2 w-100" [ngClass]="{
-                    'bg-warning-subtle text-warning-emphasis': ticket.status === 'OPEN',
-                    'bg-primary-subtle text-primary-emphasis': ticket.status === 'IN_PROGRESS',
-                    'bg-success-subtle text-success-emphasis': ticket.status === 'RESOLVED'
-                  }">{{ ticket.status }}</div>
-                </div>
-
-                <div class="info-group mb-3">
-                  <label class="text-muted small fw-bold text-uppercase mb-1 d-block">Category</label>
-                  <div class="p-2 bg-light rounded border text-secondary">{{ ticket.category }}</div>
-                </div>
-
-                <div class="info-group mb-3">
-                  <label class="text-muted small fw-bold text-uppercase mb-1 d-block">Priority</label>
-                  <div class="badge p-2 w-100" [ngClass]="{
-                    'bg-danger-subtle text-danger-emphasis': ticket.priority === 'URGENT' || ticket.priority === 'HIGH',
-                    'bg-warning-subtle text-warning-emphasis': ticket.priority === 'MEDIUM',
-                    'bg-secondary-subtle text-secondary-emphasis': ticket.priority === 'LOW'
-                  }">{{ ticket.priority }}</div>
-                </div>
-
-                <div class="info-group mb-3">
-                  <label class="text-muted small fw-bold text-uppercase mb-1 d-block">Created</label>
-                  <div class="p-2 bg-light rounded border text-secondary small">{{ ticket.createdAt | date:'medium' }}</div>
-                </div>
-
-                <div class="info-group mb-3">
-                  <label class="text-muted small fw-bold text-uppercase mb-1 d-block">Created By</label>
-                  <div class="d-flex align-items-center gap-2">
-                    <div class="avatar-sm bg-secondary-subtle rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                      <i class="bi bi-person h6 mb-0"></i>
-                    </div>
-                    <span class="small fw-semibold text-secondary">{{ ticket.createdBy.name }}</span>
+        <!-- Comment List -->
+        <div class="comments-list">
+          @for (comment of comments; track comment.id) {
+            <div class="comment-item" [class.internal]="comment.isInternal">
+              <div class="comment-header">
+                <div class="comment-author">
+                  <div class="avatar-sm" [class.accent]="comment.author.role === 'ADMIN' || comment.author.role === 'SUPERUSER'">
+                    <i class="bi bi-person-fill"></i>
                   </div>
+                  <span class="author-name">{{ comment.author.name || comment.author.username }}</span>
+                  @if (comment.isInternal) {
+                    <span class="internal-badge">
+                      <i class="bi bi-lock-fill"></i> Nota interna
+                    </span>
+                  }
+                </div>
+                <span class="comment-date">{{ comment.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+              <p class="comment-body">{{ comment.body }}</p>
+            </div>
+          } @empty {
+            <div class="empty-comments">
+              <i class="bi bi-chat-dots"></i>
+              <p>No hay comentarios aún</p>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Info + Timeline -->
+    <div class="right-column">
+
+      <!-- Ticket Info Card -->
+      <div class="info-card">
+        <h6 class="info-card-title">Información</h6>
+
+        <div class="info-item">
+          <span class="info-label">Estado</span>
+          <span class="status-badge" [ngClass]="{
+            'status-open': ticket.status === 'OPEN',
+            'status-in-progress': ticket.status === 'IN_PROGRESS',
+            'status-waiting': ticket.status === 'WAITING_USER',
+            'status-resolved': ticket.status === 'RESOLVED',
+            'status-closed': ticket.status === 'CLOSED'
+          }">{{ statusLabels[ticket.status] }}</span>
+        </div>
+
+        <div class="info-item">
+          <span class="info-label">Prioridad</span>
+          <span class="priority-badge" [ngClass]="{
+            'priority-low': ticket.priority === 'LOW',
+            'priority-medium': ticket.priority === 'MEDIUM',
+            'priority-high': ticket.priority === 'HIGH',
+            'priority-urgent': ticket.priority === 'URGENT'
+          }">{{ priorityLabels[ticket.priority] }}</span>
+        </div>
+
+        <div class="info-item">
+          <span class="info-label">Categoría</span>
+          <span class="info-value">{{ ticket.category || '—' }}</span>
+        </div>
+
+        <div class="info-separator"></div>
+
+        <div class="info-item">
+          <span class="info-label">Creado por</span>
+          <div class="info-user">
+            <div class="avatar-sm">
+              <i class="bi bi-person-fill"></i>
+            </div>
+            <span>{{ ticket.createdBy?.name || ticket.createdBy?.username }}</span>
+          </div>
+        </div>
+
+        @if (ticket.assignedTo) {
+          <div class="info-item">
+            <span class="info-label">Asignado a</span>
+            <div class="info-user">
+              <div class="avatar-sm accent">
+                <i class="bi bi-person-fill"></i>
+              </div>
+              <span>{{ ticket.assignedTo.name || ticket.assignedTo.username }}</span>
+            </div>
+          </div>
+        } @else {
+          <div class="info-item">
+            <span class="info-label">Asignado a</span>
+            <span class="info-value unassigned">Sin asignar</span>
+          </div>
+        }
+
+        <div class="info-separator"></div>
+
+        <div class="info-item">
+          <span class="info-label">Fecha de creación</span>
+          <span class="info-value">{{ ticket.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+
+        <div class="info-item">
+          <span class="info-label">Última actualización</span>
+          <span class="info-value">{{ ticket.updatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+
+        @if (ticket.closedAt) {
+          <div class="info-item">
+            <span class="info-label">Cerrado</span>
+            <span class="info-value">{{ ticket.closedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+        }
+      </div>
+
+      <!-- Event Timeline -->
+      <div class="info-card">
+        <h6 class="info-card-title">Historial de Actividad</h6>
+
+        <div class="timeline">
+          @for (event of events; track event.id) {
+            <div class="timeline-item">
+              <div class="timeline-icon" [ngClass]="{
+                'icon-created': event.type === 'TICKET_CREATED',
+                'icon-status': event.type === 'STATUS_CHANGED',
+                'icon-priority': event.type === 'PRIORITY_CHANGED',
+                'icon-assigned': event.type === 'ASSIGNED',
+                'icon-comment': event.type === 'COMMENT_ADDED',
+                'icon-closed': event.type === 'TICKET_CLOSED',
+                'icon-category': event.type === 'CATEGORY_CHANGED'
+              }">
+                <i class="bi" [ngClass]="eventTypeIcons[event.type]"></i>
+              </div>
+              <div class="timeline-content">
+                <span class="timeline-action">{{ eventTypeLabels[event.type] }}</span>
+                @if (event.payloadJson?.before && event.payloadJson?.after) {
+                  <span class="timeline-detail">
+                    <span class="detail-before">{{ event.payloadJson.before }}</span>
+                    <i class="bi bi-arrow-right"></i>
+                    <span class="detail-after">{{ event.payloadJson.after }}</span>
+                  </span>
+                } @else if (event.payloadJson?.after) {
+                  <span class="timeline-detail">{{ event.payloadJson.after }}</span>
+                }
+                <div class="timeline-meta">
+                  <span>{{ event.actor.name || event.actor.username }}</span>
+                  <span class="meta-dot">·</span>
+                  <span>{{ event.createdAt | date:'dd/MM HH:mm' }}</span>
                 </div>
               </div>
             </div>
-          </div>
-
-          <!-- Description & Comments -->
-          <div class="col-lg-8">
-            <div class="d-flex flex-column gap-4">
-              <!-- Description -->
-              <div class="card shadow-sm border-0 rounded-4">
-                <div class="card-body p-4">
-                  <h5 class="card-title fw-bold mb-3">Description</h5>
-                  <div class="p-4 bg-light rounded-4 border text-secondary" style="min-height: 150px; line-height: 1.6;">
-                    {{ ticket.description }}
-                  </div>
-                </div>
-              </div>
-
-              <!-- Admin Comments -->
-              <div class="card shadow-sm border-0 rounded-4">
-                <div class="card-body p-4">
-                  <h5 class="card-title fw-bold mb-4">Comments</h5>
-
-                  <!-- Add Comment -->
-                  <div class="mb-4">
-                    <div class="input-group">
-                      <input type="text" class="form-control rounded-start-4 border-end-0 border-2" placeholder="Add a comment or internal note...">
-                      <button class="btn btn-warning rounded-end-4 px-4 fw-bold text-white border-2 border-start-0" type="button">Post</button>
-                    </div>
-                  </div>
-
-                  <!-- Comment List -->
-                  <div class="d-flex flex-column gap-3">
-                    @for (comment of ticket.comments; track comment.id) {
-                      <div class="comment-item p-3 border rounded-4 bg-light">
-                        <div class="d-flex align-items-center gap-2 mb-2">
-                          <div class="avatar-xs bg-white rounded-circle d-flex align-items-center justify-content-center border" style="width: 24px; height: 24px;">
-                            <i class="bi bi-person small"></i>
-                          </div>
-                          <span class="fw-bold small">{{ comment.author.name }}</span>
-                          <span class="text-muted small ms-auto">{{ comment.createdAt | date:'short' }}</span>
-                        </div>
-                        <p class="mb-0 small text-secondary">{{ comment.body }}</p>
-                        @if (comment.isInternal) {
-                          <span class="badge bg-danger-subtle text-danger border border-danger-subtle mt-2 fw-bold" style="font-size: 0.65rem;">INTERNAL NOTE</span>
-                        }
-                      </div>
-                    } @empty {
-                      <div class="text-center py-4 text-muted small">
-                        <i class="bi bi-chat-dots d-block h2 mb-2 opacity-25"></i>
-                        No comments yet.
-                      </div>
-                    }
-                  </div>
-                </div>
-              </div>
+          } @empty {
+            <div class="empty-timeline">
+              <i class="bi bi-clock-history"></i>
+              <p>Sin actividad registrada</p>
             </div>
-          </div>
+          }
         </div>
-      } @else {
-        <div class="d-flex justify-content-center align-items-center py-5">
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-          <span class="ms-2 text-muted">Cargando detalles del ticket...</span>
-        </div>
-      }
+      </div>
     </div>
   </div>
-</div>
+}
