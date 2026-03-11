@@ -1,7 +1,7 @@
-<div class="d-flex flex-column vh-100 bg-primary text-white p-3" style="width: 260px; min-width: 260px;">
+<div class="sidebar d-flex flex-column vh-100 text-white p-3" style="width: 260px; min-width: 260px;">
   <!-- Brand -->
   <div class="d-flex align-items-center mb-4 px-2">
-    <i class="bi bi-ticket-perforated-fill fs-4 text-warning me-2"></i>
+    <i class="bi bi-ticket-perforated-fill fs-4 me-2" style="color: #f97316;"></i>
     <span class="fw-bold fs-5">TicketOut</span>
   </div>
 
@@ -26,13 +26,13 @@
        [routerLinkActiveOptions]="{exact: false}">
       <i class="bi {{ item.icon }} me-3 fs-5"></i>
       <span class="flex-grow-1">{{ item.label }}</span>
-      <span *ngIf="item.badge" class="badge bg-warning text-dark ms-2">{{ item.badge }}</span>
+      <span *ngIf="item.badge" class="sidebar-badge ms-2">{{ item.badge }}</span>
     </a>
   </nav>
 
   <!-- Logout Button -->
   <div class="mt-auto">
-    <button class="btn btn-outline-light w-100 d-flex align-items-center justify-content-center"
+    <button class="sidebar-logout w-100 d-flex align-items-center justify-content-center"
             (click)="logout()">
       <i class="bi bi-box-arrow-right me-2"></i>
       <span>Cerrar Sesión</span>

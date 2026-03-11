@@ -1,0 +1,33 @@
+.sidebar {
+  background: #0b3a53;
+}
+
+/* Badge naranja */
+.sidebar-badge {
+  background: #f97316;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  line-height: 1;
+}
+
+/* Logout button - rojo como en el diseño */
+.sidebar-logout {
+  padding: 0.65rem;
+  border-radius: 10px;
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sidebar-logout:hover {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #fecaca;
+}

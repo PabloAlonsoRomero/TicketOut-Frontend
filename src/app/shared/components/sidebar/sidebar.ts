@@ -18,13 +18,13 @@ export class Sidebar implements OnInit {
 
   menuItems = [
     {
-      label: 'Panel',
+      label: 'Dashboard',
       icon: 'bi-grid-1x2-fill',
       route: '/dashboard',
       badge: null
     },
     {
-      label: 'Incidencias',
+      label: 'Tickets',
       icon: 'bi-ticket-perforated',
       route: '/tickets',
       badge: '12'
