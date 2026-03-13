@@ -36,8 +36,8 @@ export class Sidebar implements OnInit {
       badge: null
     },
     {
-      label: 'Reportes',
-      icon: 'bi-bar-chart-line',
+      label: 'Registro de Logs',
+      icon: 'bi-journal-text',
       route: '/reports',
       badge: null
     },

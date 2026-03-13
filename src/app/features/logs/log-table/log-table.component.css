@@ -1,0 +1,69 @@
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+
+:host {
+  --ink-900: #1d2939;
+  --ink-700: #344054;
+  --ink-500: #667085;
+  --line-200: #d0d5dd;
+  --surface: #ffffff;
+  --panel: #0b3a53;
+  --panel-soft: #155273;
+  --accent: #f97316;
+  --bg: #eef3f7;
+  display: block;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: var(--ink-900);
+}
+
+.header-visual {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--panel), var(--panel-soft));
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 20px rgba(11, 58, 83, 0.25); 
+}
+
+.header-visual i {
+  font-size: 1.15rem;
+}
+
+.table-card {
+  background: var(--surface);
+  border: 1px solid rgba(16, 24, 40, 0.06);
+  border-radius: 16px;
+}
+
+.placeholder-box {
+  min-height: 280px;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  gap: 0.55rem;
+}
+
+.placeholder-icon {
+  font-size: 2.1rem;
+  color: var(--panel-soft);
+}
+
+.placeholder-title {
+  margin: 0;
+  color: var(--ink-900);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.placeholder-text {
+  margin: 0;
+  color: var(--ink-500);
+  font-size: 0.95rem;
+}
