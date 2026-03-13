@@ -19,7 +19,6 @@ export interface LoginRequest {
 }
 
 export interface AuthResponse {
-  accessToken: string;
-  refreshToken: string;
+  token: string;
   user: Pick<User, 'id' | 'email' | 'name' | 'role'>;
 }
