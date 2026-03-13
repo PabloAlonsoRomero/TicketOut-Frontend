@@ -1,5 +1,7 @@
 import { TicketPriority, TicketStatus } from '../utils/ticket-enums';
 import { User } from './user.model';
+import { Comment } from './commet-model';
+import { TicketEvent } from './event-model';
 
 export interface Ticket {
   id: number;
@@ -13,6 +15,8 @@ export interface Ticket {
   createdAt: string;
   updatedAt: string;
   closedAt?: string | null;
+  comments?: Comment[];
+  events?: TicketEvent[];
 }
 
 //Crear / Actualizar Ticket
