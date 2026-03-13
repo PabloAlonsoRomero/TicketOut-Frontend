@@ -1,8 +1,105 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'bootstrap/dist/css/bootstrap.min.css';
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
 
-/* Global styles */
+/* Global variables */
+:root {
+  --ink-900: #1d2939;
+  --ink-700: #344054;
+  --ink-500: #667085;
+  --line-200: #d0d5dd;
+  --surface: #ffffff;
+  --panel: #0b3a53;
+  --panel-soft: #155273;
+  --accent: #f97316;
+  --bg: #ffffff;
+}
+
 body {
-  background-color: #f8f9fa;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: #ffffff;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--ink-900);
+}
+
+/* ── Status Badges ── */
+.status-badge {
+  display: inline-block;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.status-open {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.status-in-progress {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.status-waiting {
+  background: #fce7f3;
+  color: #9d174d;
+}
+
+.status-resolved {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-closed {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+/* ── Priority Badges ── */
+.priority-badge {
+  display: inline-block;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+  background: white;
+  border: 1.5px solid;
+}
+
+.priority-low {
+  border-color: #9ca3af;
+  color: var(--ink-500);
+}
+
+.priority-medium {
+  border-color: #f59e0b;
+  color: #b45309;
+}
+
+.priority-high {
+  border-color: #ef4444;
+  color: #dc2626;
+}
+
+.priority-urgent {
+  border-color: #991b1b;
+  color: #991b1b;
+  background: #fef2f2;
+}
+
+/* ── Avatars ── */
+.avatar-sm {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(11, 58, 83, 0.1);
+  color: #0b3a53;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  flex-shrink: 0;
 }
