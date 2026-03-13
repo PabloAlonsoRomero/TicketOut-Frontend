@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
+import { AuthService } from '../../../features/auth/services/auth.service';
 
 @Component({
   selector: 'app-topbar',
@@ -16,7 +16,7 @@ export class Topbar implements OnInit {
   userName: string = 'Usuario';
 
   ngOnInit() {
-    const user = this.authService.getCurrentUser();
+    const user = this.authService.getUser();
     if (user) {
       this.userName = user.name || user.email || 'Usuario';
     }
@@ -24,6 +24,6 @@ export class Topbar implements OnInit {
 
   logout() {
     this.authService.logout();
-    this.router.navigate(['/login']);
+    window.location.href = '/login';
   }
 }

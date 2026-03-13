@@ -9,8 +9,9 @@
           </span>
           <input type="text"
                  class="form-control bg-light border-start-0"
-                 placeholder="Buscar tickets, usuarios..."
-                 style="border-left: none; box-shadow: none;">
+                 placeholder="Buscador global (Próximamente...)"
+                 style="border-left: none; box-shadow: none; cursor: not-allowed;"
+                 disabled>
         </div>
       </div>
 
@@ -30,8 +31,8 @@
             <i class="bi bi-chevron-down ms-1 text-muted"></i>
           </button>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Perfil</a></li>
-            <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Ajustes</a></li>
+            <li><a class="dropdown-item disabled text-muted" style="cursor: not-allowed;"><i class="bi bi-person me-2"></i>Perfil</a></li>
+            <li><a class="dropdown-item disabled text-muted" style="cursor: not-allowed;"><i class="bi bi-gear me-2"></i>Ajustes</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item text-danger" href="#" (click)="logout()">
               <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión

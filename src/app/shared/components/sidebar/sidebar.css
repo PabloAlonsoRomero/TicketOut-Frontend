@@ -31,3 +31,13 @@
   border-color: rgba(239, 68, 68, 0.5);
   color: #fecaca;
 }
+
+.nav-link-disabled {
+  user-select: none;
+  background: transparent !important;
+  color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.nav-link-disabled i {
+  color: rgba(255, 255, 255, 0.3) !important;
+}
