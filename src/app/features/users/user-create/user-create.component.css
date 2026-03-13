@@ -1,0 +1,231 @@
+:host {
+  --ink-900: #1d2939;
+  --ink-700: #344054;
+  --ink-500: #667085;
+  --line-200: #d0d5dd;
+  --surface: #ffffff;
+  --panel: #0b3a53;
+  --panel-soft: #155273;
+  --accent: #f97316;
+  --bg: #eef3f7;
+  display: block;
+}
+
+/* Page Header (Matching Ticket Detail) */
+.page-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: var(--ink-900);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.page-subtitle {
+  color: var(--ink-500);
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.btn-back {
+  background: white;
+  border: 1px solid var(--line-200);
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--ink-700);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.btn-back:hover {
+  background: var(--bg);
+  border-color: var(--panel-soft);
+}
+
+/* Layout (2 Columns like Ticket Detail) */
+.detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 1.5rem;
+}
+
+@media (max-width: 992px) {
+  .detail-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Cards (Content and Info) */
+.content-card, .info-card {
+  background: var(--surface);
+  border-radius: 16px;
+  border: 1px solid rgba(16, 24, 40, 0.06);
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+}
+
+.card-section-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--panel);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.info-card-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--ink-900);
+  margin-bottom: 1.25rem;
+}
+
+/* Form Elements */
+.form-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--ink-700);
+  margin-bottom: 0.45rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.form-control-custom {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--line-200);
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--ink-900);
+  transition: all 0.2s;
+  background: #fdfdfd;
+}
+
+.form-control-custom:focus {
+  outline: none;
+  border-color: var(--panel-soft);
+  box-shadow: 0 0 0 4px rgba(21, 82, 115, 0.08);
+  background: #fff;
+}
+
+.field-error {
+  display: block;
+  font-size: 0.75rem;
+  color: #dc2626;
+  font-weight: 600;
+  margin-top: 0.35rem;
+}
+
+/* Icon Groups */
+.input-group-custom {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  color: var(--ink-500);
+  font-size: 1rem;
+}
+
+.with-icon {
+  padding-left: 2.75rem;
+}
+
+.btn-toggle-pass {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--ink-500);
+  padding: 0.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+  z-index: 10;
+}
+
+.btn-toggle-pass:hover {
+  color: var(--panel-soft);
+}
+
+/* Actions */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.btn-cancel {
+  background: #f3f4f6;
+  border: 0;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 700;
+  color: #4b5563;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-cancel:hover {
+  background: #e5e7eb;
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, var(--accent), #fb923c);
+  border: 0;
+  padding: 0.75rem 2rem;
+  border-radius: 12px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.25);
+  display: flex;
+  align-items: center;
+}
+
+.btn-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(249, 115, 22, 0.35);
+}
+
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Info Helpers */
+.info-item {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.info-label {
+  color: var(--ink-500);
+  font-size: 0.75rem;
+}
+
+.info-separator {
+  height: 1px;
+  background: #f2f4f7;
+  margin: 1.25rem 0;
+}

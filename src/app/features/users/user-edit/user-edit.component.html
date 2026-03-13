@@ -1,0 +1,156 @@
+@if (loading) {
+  <div class="d-flex justify-content-center align-items-center py-5">
+    <div class="spinner-border text-secondary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <span class="ms-3 text-muted">Cargando usuario...</span>
+  </div>
+} @else {
+  <div class="page-title-row">
+    <div>
+      <h1 class="page-title">Editar Usuario</h1>
+      <p class="page-subtitle">Actualiza la información de <strong>{{ user.username }}</strong></p>
+    </div>
+    <button class="btn-back" (click)="cancel()">
+      <i class="bi bi-arrow-left me-1"></i>
+      Volver
+    </button>
+  </div>
+
+  <div class="detail-layout">
+    <!-- Main Form Column -->
+    <div class="left-column">
+      <div class="content-card">
+        <h6 class="card-section-title">
+          <i class="bi bi-person-badge me-2"></i>Datos de Perfil
+        </h6>
+        
+        <form (ngSubmit)="onSubmit()" #userEditForm="ngForm">
+          <div class="form-group mb-3">
+            <label class="form-label">Nombre Completo</label>
+            <input 
+              type="text" 
+              class="form-control-custom" 
+              [(ngModel)]="user.name" 
+              name="name" 
+              required
+              #nameField="ngModel"
+            >
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">Nombre de Usuario</label>
+                <input 
+                  type="text" 
+                  class="form-control-custom" 
+                  [(ngModel)]="user.username" 
+                  name="username" 
+                  required
+                >
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">Correo Electrónico</label>
+                <input 
+                  type="email" 
+                  class="form-control-custom" 
+                  [(ngModel)]="user.email" 
+                  name="email" 
+                  required
+                  email
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group mb-4">
+            <label class="form-label">Cambiar Contraseña <small class="text-muted">(Opcional)</small></label>
+            <div class="input-group-custom">
+              <span class="input-icon"><i class="bi bi-key-fill"></i></span>
+              <input 
+                [type]="showPassword ? 'text' : 'password'" 
+                class="form-control-custom with-icon pe-5" 
+                [(ngModel)]="user.password" 
+                name="password" 
+                placeholder="Dejar en blanco para mantener actual"
+                minlength="6"
+              >
+              <button type="button" class="btn-toggle-pass" (click)="togglePassword()">
+                <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-actions mt-4 pt-3 border-top">
+            <button type="button" class="btn-cancel" (click)="cancel()">Cancelar</button>
+            <button 
+              type="submit" 
+              class="btn-submit" 
+              [disabled]="userEditForm.invalid || submitting"
+            >
+              @if (submitting) {
+                <span class="spinner-border spinner-border-sm me-1"></span>
+                Guardando...
+              } @else {
+                <i class="bi bi-save me-1"></i>
+                Guardar Cambios
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Sidebar Column -->
+    <div class="right-column">
+      <!-- Status & Role Card -->
+      <div class="info-card">
+        <h6 class="info-card-title">Estado y Permisos</h6>
+        
+        <div class="info-item flex-column align-items-start gap-2">
+          <span class="info-label text-uppercase small fw-bold">Rol de Usuario</span>
+          <select class="form-control-custom" [(ngModel)]="user.role" name="role">
+            @for (r of roles; track r) {
+              <option [value]="r">{{ roleLabels[r] }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="info-separator"></div>
+
+        <div class="info-item flex-column align-items-start gap-2">
+          <span class="info-label text-uppercase small fw-bold">Estado de Cuenta</span>
+          <div class="form-check form-switch custom-switch">
+            <input 
+              class="form-check-input" 
+              type="checkbox" 
+              role="switch" 
+              id="userActiveSwitch"
+              [(ngModel)]="user.isActive"
+              name="isActive"
+            >
+            <label class="form-check-label ms-2" for="userActiveSwitch">
+              {{ user.isActive ? 'Cuenta Activa' : 'Cuenta Inactiva' }}
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Account Info Card -->
+      <div class="info-card mt-3">
+        <h6 class="info-card-title">Metadatos</h6>
+        <div class="info-item flex-column gap-1">
+          <span class="info-label">Miembro desde</span>
+          <span class="info-value fw-semibold text-dark">{{ user.createdAt | date:'longDate' }}</span>
+        </div>
+        <div class="info-item flex-column gap-1 mt-2">
+          <span class="info-label">ID de Usuario</span>
+          <span class="info-value font-monospace text-secondary">#{{ user.id }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+}

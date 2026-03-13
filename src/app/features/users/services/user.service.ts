@@ -35,7 +35,22 @@ export class UserService {
 
   // Obtiene un usuario específico por su ID
   // Retorna un Observable con los datos del usuario
-  getUserById(id: string): Observable<any> {
+  getUserById(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
+  }
+
+  // Crea un nuevo usuario
+  createUser(userData: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl, userData, { headers: this.getHeaders() });
+  }
+
+  // Actualiza un usuario existente
+  updateUser(id: number, userData: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, userData, { headers: this.getHeaders() });
+  }
+
+  // Elimina (desactiva) un usuario
+  deleteUser(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
   }
 }

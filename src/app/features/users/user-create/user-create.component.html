@@ -1,0 +1,137 @@
+<div class="page-title-row">
+  <div>
+    <h1 class="page-title">Crear Nuevo Usuario</h1>
+    <p class="page-subtitle">Registra un nuevo miembro en la plataforma</p>
+  </div>
+  <button class="btn-back" (click)="cancel()">
+    <i class="bi bi-arrow-left me-1"></i>
+    Volver
+  </button>
+</div>
+
+<div class="detail-layout">
+  <!-- Main Form Column -->
+  <div class="left-column">
+    <div class="content-card">
+      <h6 class="card-section-title">
+        <i class="bi bi-person-badge me-2"></i>Datos de Identidad
+      </h6>
+      
+      <form (ngSubmit)="onSubmit()" #userForm="ngForm">
+        <div class="form-group mb-3">
+          <label class="form-label">Nombre Completo</label>
+          <input 
+            type="text" 
+            class="form-control-custom" 
+            [(ngModel)]="user.name" 
+            name="name" 
+            placeholder="Ej: Juan Pérez"
+            required
+            #nameField="ngModel"
+          >
+          @if (nameField.invalid && nameField.touched) {
+            <span class="field-error">El nombre es obligatorio</span>
+          }
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label">Nombre de Usuario</label>
+              <input 
+                type="text" 
+                class="form-control-custom" 
+                [(ngModel)]="user.username" 
+                name="username" 
+                placeholder="jperez"
+                required
+                #userField="ngModel"
+              >
+              @if (userField.invalid && userField.touched) {
+                <span class="field-error">El nombre de usuario es obligatorio</span>
+              }
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label">Correo Electrónico</label>
+              <input 
+                type="email" 
+                class="form-control-custom" 
+                [(ngModel)]="user.email" 
+                name="email" 
+                placeholder="juan@ejemplo.com"
+                required
+                email
+                #emailField="ngModel"
+              >
+              @if (emailField.invalid && emailField.touched) {
+                <span class="field-error">Ingresa un correo válido</span>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group mb-4">
+          <label class="form-label">Contraseña</label>
+          <div class="input-group-custom">
+            <span class="input-icon"><i class="bi bi-key"></i></span>
+            <input 
+              [type]="showPassword ? 'text' : 'password'" 
+              class="form-control-custom with-icon pe-5" 
+              [(ngModel)]="user.password" 
+              name="password" 
+              placeholder="••••••••"
+              required
+              minlength="6"
+              #passField="ngModel"
+            >
+            <button type="button" class="btn-toggle-pass" (click)="togglePassword()">
+              <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+            </button>
+          </div>
+          @if (passField.invalid && passField.touched) {
+            <span class="field-error">Min. 6 caracteres</span>
+          }
+        </div>
+
+        <div class="form-actions mt-4 pt-3 border-top">
+          <button type="button" class="btn-cancel" (click)="cancel()">Cancelar</button>
+          <button 
+            type="submit" 
+            class="btn-submit" 
+            [disabled]="userForm.invalid || submitting"
+          >
+            @if (submitting) {
+              <span class="spinner-border spinner-border-sm me-1"></span>
+              Guardando...
+            } @else {
+              <i class="bi bi-check-lg me-1"></i>
+              Crear Usuario
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Role & Info Column -->
+  <div class="right-column">
+    <div class="info-card">
+      <h6 class="info-card-title">Configuración de Acceso</h6>
+      
+      <div class="info-item flex-column align-items-start gap-2">
+        <span class="info-label text-uppercase small fw-bold">Rol en el sistema</span>
+        <select class="form-control-custom" [(ngModel)]="user.role" name="role">
+          @for (r of roles; track r) {
+            <option [value]="r">{{ roleLabels[r] }}</option>
+          }
+        </select>
+        <p class="small text-muted mt-2">
+          <i class="bi bi-info-circle me-1"></i>
+          El rol define los permisos que el usuario tendrá en la plataforma.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -35,8 +35,8 @@ export class UserListComponent implements OnInit {
 
   loadUsers() {
     this.userService.getUsers().subscribe({
-      next: (data) => {
-        this.users = data;
+      next: (response: any) => {
+        this.users = response.data || response;
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -48,6 +48,34 @@ export class UserListComponent implements OnInit {
         }
       }
     });
+  }
+
+  createUser() {
+    this.router.navigate(['/users/create']);
+  }
+
+  editUser(user: any) {
+    this.router.navigate(['/users', user.id, 'edit']);
+  }
+
+  toggleUserStatus(user: any) {
+    const action = user.isActive !== false ? 'desactivar' : 'activar';
+    const confirmMessage = `¿Estás seguro de que deseas ${action} al usuario ${user.name || user.username}?`;
+    
+    if (confirm(confirmMessage)) {
+      const operation = user.isActive !== false 
+        ? this.userService.deleteUser(user.id) // deleteUser en el service hace el isActive: false
+        : this.userService.updateUser(user.id, { isActive: true });
+
+      operation.subscribe({
+        next: () => {
+          this.loadUsers();
+        },
+        error: (err) => {
+          console.error(`Error al ${action} usuario:`, err);
+        }
+      });
+    }
   }
 
   logout() {
