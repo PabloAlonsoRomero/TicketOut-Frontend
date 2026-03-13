@@ -20,10 +20,12 @@
         <i class="bi bi-arrow-left me-1"></i>
         Volver
       </button>
-      <button class="btn-edit" (click)="editTicket()">
-        <i class="bi bi-pencil me-1"></i>
-        Editar
-      </button>
+      @if (userRole !== 'USER') {
+        <button class="btn-edit" (click)="editTicket()">
+          <i class="bi bi-pencil me-1"></i>
+          Editar
+        </button>
+      }
     </div>
   </div>
 
@@ -87,10 +89,17 @@
             <div class="comment-item" [class.internal]="comment.isInternal">
               <div class="comment-header">
                 <div class="comment-author">
-                  <div class="avatar-sm" [class.accent]="comment.author.role === 'ADMIN' || comment.author.role === 'SUPERUSER'">
-                    <i class="bi bi-person-fill"></i>
-                  </div>
-                  <span class="author-name">{{ comment.author.name || comment.author.username }}</span>
+                  @if (comment.author) {
+                    <div class="avatar-sm" [class.accent]="comment.author.role === 'ADMIN' || comment.author.role === 'SUPERUSER'">
+                      <i class="bi bi-person-fill"></i>
+                    </div>
+                    <span class="author-name">{{ comment.author.name || comment.author.username }}</span>
+                  } @else {
+                    <div class="avatar-sm">
+                      <i class="bi bi-person-fill"></i>
+                    </div>
+                    <span class="author-name text-muted">Usuario desconocido</span>
+                  }
                   @if (comment.isInternal) {
                     <span class="internal-badge">
                       <i class="bi bi-lock-fill"></i> Nota interna
@@ -152,26 +161,71 @@
             <div class="avatar-sm">
               <i class="bi bi-person-fill"></i>
             </div>
-            <span>{{ ticket.createdBy?.name || ticket.createdBy?.username }}</span>
+            <span>{{ ticket.createdBy.name || ticket.createdBy.username }}</span>
           </div>
         </div>
 
-        @if (ticket.assignedTo) {
-          <div class="info-item">
-            <span class="info-label">Asignado a</span>
-            <div class="info-user">
-              <div class="avatar-sm accent">
-                <i class="bi bi-person-fill"></i>
+        <div class="info-item">
+          <span class="info-label">Asignado a</span>
+          
+          @if (userRole === 'SUPERUSER') {
+            <div class="d-flex flex-column gap-2">
+              @if (ticket.assignedTo) {
+                <div class="info-user p-1">
+                  <div class="avatar-sm accent">
+                    <i class="bi bi-person-fill"></i>
+                  </div>
+                  <span class="fw-bold">{{ ticket.assignedTo.name || ticket.assignedTo.username }}</span>
+                </div>
+              } @else {
+                <span class="info-value unassigned px-1 mb-1">Sin asignar</span>
+              }
+              
+              <div class="assignment-control d-flex flex-column gap-2">
+                @if (!ticket.assignedTo || showAssignForm) {
+                  <div class="d-flex gap-2 align-items-center">
+                    <select class="assign-select" [(ngModel)]="selectedAssigneeId">
+                      <option [value]="null">Seleccionar encargado...</option>
+                      @for (u of assignableUsers; track u.id) {
+                        <option [value]="u.id">{{ u.name || u.username }} ({{ u.role }})</option>
+                      }
+                    </select>
+                    <button class="btn-assign" (click)="assignTicket()" [disabled]="!selectedAssigneeId">
+                      Asignar
+                    </button>
+                    @if (ticket.assignedTo) {
+                      <button class="btn btn-sm btn-link text-danger p-0 ms-1" (click)="showAssignForm = false">
+                        <i class="bi bi-x-circle"></i>
+                      </button>
+                    }
+                  </div>
+                } @else {
+                  <button class="btn btn-xs btn-outline-primary py-1 px-2 w-100" style="font-size: 0.72rem; border-radius: 8px;" (click)="showAssignForm = true">
+                    <i class="bi bi-person-gear me-1"></i>Cambiar usuario asignado
+                  </button>
+                }
               </div>
-              <span>{{ ticket.assignedTo.name || ticket.assignedTo.username }}</span>
             </div>
-          </div>
-        } @else {
-          <div class="info-item">
-            <span class="info-label">Asignado a</span>
-            <span class="info-value unassigned">Sin asignar</span>
-          </div>
-        }
+          } @else {
+            @if (ticket.assignedTo) {
+              <div class="info-user">
+                <div class="avatar-sm accent">
+                  <i class="bi bi-person-fill"></i>
+                </div>
+                <span>{{ ticket.assignedTo.name || ticket.assignedTo.username }}</span>
+              </div>
+            } @else {
+              <div class="d-flex align-items-center gap-2">
+                <span class="info-value unassigned">Sin asignar</span>
+                @if (userRole === 'ADMIN') {
+                  <button class="btn btn-xs btn-outline-primary py-0 px-2" style="font-size: 0.75rem;" (click)="claimTicket()">
+                    <i class="bi bi-hand-index-thumb me-1"></i>Pedir
+                  </button>
+                }
+              </div>
+            }
+          }
+        </div>
 
         <div class="info-separator"></div>
 
@@ -219,11 +273,15 @@
                     <i class="bi bi-arrow-right"></i>
                     <span class="detail-after">{{ event.payloadJson.after }}</span>
                   </span>
-                } @else if (event.payloadJson?.after) {
+                } @else if (event.payloadJson.after) {
                   <span class="timeline-detail">{{ event.payloadJson.after }}</span>
                 }
                 <div class="timeline-meta">
-                  <span>{{ event.actor.name || event.actor.username }}</span>
+                  @if (event.actor) {
+                    <span>{{ event.actor.name || event.actor.username }}</span>
+                  } @else {
+                    <span class="text-muted">Sistema / Desconocido</span>
+                  }
                   <span class="meta-dot">·</span>
                   <span>{{ event.createdAt | date:'dd/MM HH:mm' }}</span>
                 </div>

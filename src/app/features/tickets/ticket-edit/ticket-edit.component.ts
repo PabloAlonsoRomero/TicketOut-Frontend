@@ -1,12 +1,10 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { TicketService } from '../services/ticket.service';
-import { UserService } from '../../users/services/user.service';
 import { AuthService } from '../../auth/services/auth.service';
 import { Ticket, UpdateTicketRequest } from '../../../models/ticket-model';
-import { User } from '../../../models/user.model';
 import { TicketPriority, TicketStatus } from '../../../utils/ticket-enums';
 
 @Component({
@@ -18,14 +16,14 @@ import { TicketPriority, TicketStatus } from '../../../utils/ticket-enums';
 })
 export class TicketEditComponent implements OnInit {
   private ticketService = inject(TicketService);
-  private userService = inject(UserService);
   private authService = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private cdr = inject(ChangeDetectorRef);
 
   ticket: Ticket | null = null;
   loading = true;
-  users: User[] = [];
+  userRole: string = 'USER';
 
   updateData: UpdateTicketRequest = {
     status: undefined,
@@ -68,53 +66,52 @@ export class TicketEditComponent implements OnInit {
   submitting = false;
 
   ngOnInit() {
-    this.loadUsers();
+    console.log('TicketEditComponent: ngOnInit');
+    const user = this.authService.getUser();
+    if (user) {
+      this.userRole = user.role || 'USER';
+    }
     const id = this.route.snapshot.paramMap.get('id');
+    console.log('TicketEditComponent: ID from route:', id);
     if (id) {
-      // TODO: restaurar cuando haya backend
-      // this.loadTicket(id);
-
-      // Datos temporales para pruebas visuales
-      this.ticket = {
-        id: Number(id),
-        title: 'No puedo acceder al sistema de correo',
-        description: 'Desde ayer no puedo iniciar sesión en el correo corporativo. He intentado restablecer la contraseña pero el enlace no llega.',
-        status: TicketStatus.OPEN,
-        priority: TicketPriority.HIGH,
-        category: 'Soporte Técnico',
-        createdBy: { id: 1, username: 'jframe', email: 'john@test.com', name: 'John Frame', role: 'USER' as any, isActive: true, createdAt: '', updatedAt: '' },
-        assignedTo: null,
-        createdAt: '2026-03-10T14:30:00Z',
-        updatedAt: '2026-03-10T14:30:00Z'
-      };
-      this.title = this.ticket.title;
-      this.description = this.ticket.description;
-      this.updateData = {
-        status: this.ticket.status,
-        priority: this.ticket.priority,
-        category: this.ticket.category,
-        assignedToId: this.ticket.assignedTo?.id ?? null
-      };
-      this.loading = false;
+       this.loadTicket(id);
+    } else {
+       console.error('TicketEditComponent: No ID found in route');
+       this.router.navigate(['/tickets']);
     }
   }
 
   loadTicket(id: string) {
+    this.loading = true;
+    console.log('TicketEditComponent: Fetching ticket ID:', id);
+    
     this.ticketService.getTicketById(id).subscribe({
-      next: (data) => {
-        this.ticket = data;
-        this.title = data.title;
-        this.description = data.description;
-        this.updateData = {
-          status: data.status,
-          priority: data.priority,
-          category: data.category,
-          assignedToId: data.assignedTo?.id ?? null
-        };
+      next: (response: any) => {
+        console.log('TicketEditComponent: Data received:', response);
+        // Handle both { success: true, data: {...} } and direct {...}
+        const ticketData = response.data || response;
+        
+        if (ticketData && ticketData.id) {
+          this.ticket = ticketData;
+          this.title = ticketData.title;
+          this.description = ticketData.description;
+          this.updateData = {
+            status: ticketData.status,
+            priority: ticketData.priority,
+            category: ticketData.category || '',
+            assignedToId: ticketData.assignedTo?.id ?? null
+          };
+          console.log('TicketEditComponent: Form initialized with:', this.updateData);
+        } else {
+          console.error('TicketEditComponent: Invalid ticket data structure', ticketData);
+          this.router.navigate(['/tickets']);
+        }
         this.loading = false;
+        this.cdr.detectChanges(); // Force update
       },
-      error: (err) => {
-        console.error('Error al cargar ticket:', err);
+      error: (err: any) => {
+        console.error('TicketEditComponent: HTTP Error:', err);
+        this.loading = false;
         this.router.navigate(['/tickets']);
       }
     });
@@ -124,36 +121,16 @@ export class TicketEditComponent implements OnInit {
     if (!this.ticket) return;
     this.submitting = true;
 
-    // TODO: restaurar cuando haya backend
-    // this.ticketService.updateTicket(this.ticket.id, this.updateData).subscribe({
-    //   next: () => {
-    //     this.router.navigate(['/tickets', this.ticket!.id]);
-    //   },
-    //   error: (err) => {
-    //     console.error('Error al actualizar ticket:', err);
-    //     this.submitting = false;
-    //   }
-    // });
-
-    // Temporal: simular actualización y redirigir
-    setTimeout(() => {
-      this.router.navigate(['/tickets']);
-    }, 500);
-  }
-
-  loadUsers() {
-    // TODO: restaurar cuando haya backend
-    // this.userService.getUsers().subscribe({
-    //   next: (data) => this.users = data,
-    //   error: (err) => console.error('Error al cargar usuarios:', err)
-    // });
-
-    // Datos temporales para pruebas visuales
-    this.users = [
-      { id: 1, username: 'jframe', email: 'john@test.com', name: 'John Frame', role: 'USER' as any, isActive: true, createdAt: '', updatedAt: '' },
-      { id: 2, username: 'mlopez', email: 'maria@test.com', name: 'María López', role: 'ADMIN' as any, isActive: true, createdAt: '', updatedAt: '' },
-      { id: 3, username: 'cgarcia', email: 'carlos@test.com', name: 'Carlos García', role: 'USER' as any, isActive: true, createdAt: '', updatedAt: '' }
-    ];
+    this.ticketService.updateTicket(this.ticket.id, this.updateData).subscribe({
+      next: () => {
+        this.router.navigate(['/tickets', this.ticket!.id]);
+      },
+      error: (err: any) => {
+        console.error('Error al actualizar ticket:', err);
+        alert(err.error?.error || 'No se pudo actualizar el ticket');
+        this.submitting = false;
+      }
+    });
   }
 
   cancel() {
