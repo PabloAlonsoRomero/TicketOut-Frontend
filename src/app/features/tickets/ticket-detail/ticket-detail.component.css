@@ -404,6 +404,57 @@
   color: var(--accent);
 }
 
+/* ── Assignment Control ── */
+.assignment-control {
+  background: #f9fafb;
+  border: 1px solid #f2f4f7;
+  border-radius: 12px;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.assign-select {
+  border: 1px solid var(--line-200);
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: var(--ink-700);
+  padding: 0.35rem 0.5rem;
+  background: var(--surface);
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.assign-select:focus {
+  outline: none;
+  border-color: var(--panel-soft);
+}
+
+.btn-assign {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.75rem;
+  border: 0;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--panel), var(--panel-soft));
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.78rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.btn-assign:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.btn-assign:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* ── Status Badges ── */
 .status-badge {
   display: inline-block;

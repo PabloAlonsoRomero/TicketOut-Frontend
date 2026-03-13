@@ -51,21 +51,16 @@ export class TicketCreateComponent {
 
     this.submitting = true;
 
-    // TODO: restaurar cuando haya backend
-    // this.ticketService.createTicket(this.ticket).subscribe({
-    //   next: () => {
-    //     this.router.navigate(['/tickets']);
-    //   },
-    //   error: (err) => {
-    //     console.error('Error al crear ticket:', err);
-    //     this.submitting = false;
-    //   }
-    // });
-
-    // Temporal: simular creación y redirigir
-    setTimeout(() => {
-      this.router.navigate(['/tickets']);
-    }, 500);
+    this.ticketService.createTicket(this.ticket).subscribe({
+      next: () => {
+        this.router.navigate(['/tickets']);
+      },
+      error: (err) => {
+        console.error('Error al crear ticket:', err);
+        alert('Ocurrió un error al crear el ticket. Por favor, intenta de nuevo.');
+        this.submitting = false;
+      }
+    });
   }
 
   cancel() {
