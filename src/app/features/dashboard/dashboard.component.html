@@ -1,102 +1,121 @@
-<!-- Page Header -->
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <div>
-    <h1 class="h3 mb-1 text-dark">Dashboard</h1>
-    <p class="text-muted mb-0">Resumen general de actividad</p>
+  <!-- Page Header (Identical to Ticket List) -->
+  <div class="page-title-row d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="page-title h3 mb-1">Dashboard</h1>
+      <p class="text-muted mb-0 small">Hola, {{ userName }}. Estos son los últimos movimientos.</p>
+    </div>
+    <button class="action-btn" (click)="router.navigate(['/tickets/create'])">
+      <i class="bi bi-plus-lg me-1"></i>
+      Nuevo Ticket
+    </button>
   </div>
-  <button class="btn btn-primary d-flex align-items-center">
-    <i class="bi bi-plus-lg me-2"></i>
-    Nuevo Ticket
-  </button>
-</div>
 
-<!-- Statistics Cards -->
-<div class="row g-4 mb-4">
-  <div class="col-xl-3 col-md-6" *ngFor="let card of statsCards">
-    <div class="card h-100 border-0 shadow-sm">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-start mb-2">
-          <span class="text-muted small fw-medium">{{ card.label }}</span>
-          <div class="text-warning">
-            <i class="bi bi-graph-up"></i>
-          </div>
-        </div>
-        <div class="d-flex align-items-end">
-          <h3 class="mb-0 me-3 text-dark">{{ card.value }}</h3>
-          <small class="text-success fw-medium">
-            <i class="bi bi-arrow-up"></i> {{ card.change }}
-          </small>
-        </div>
+  <!-- Indicators Row (Styled like Filter Row) -->
+  <div class="indicators-row shadow-sm">
+    <div *ngFor="let card of statsCards" class="indicator-item">
+      <div class="indicator-icon-box" [ngClass]="{
+        'icon-blue': card.color === 'primary',
+        'icon-red': card.color === 'danger',
+        'icon-green': card.color === 'success',
+        'icon-orange': card.color === 'warning'
+      }">
+        <i class="bi" [ngClass]="card.icon"></i>
+      </div>
+      <div class="d-flex flex-column">
+        <span class="indicator-label">{{ card.label }}</span>
+        <h2 class="indicator-value">{{ card.value }}</h2>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Recent Tickets Table -->
-<div class="card border-0 shadow-sm">
-  <div class="card-header bg-white border-0 py-3">
-    <div class="d-flex justify-content-between align-items-center">
-      <h5 class="mb-0 text-dark">Tickets Recientes</h5>
-      <a href="#" class="btn btn-outline-primary btn-sm">Ver Todos</a>
-    </div>
-  </div>
-  <div class="card-body p-0">
+  <!-- Recent Tickets Table (Matching Columns with Ticket List) -->
+  <div class="table-card bg-white rounded-4 shadow-sm overflow-hidden">
     <div class="table-responsive">
-      <table class="table table-hover mb-0">
-        <thead class="table-light">
+      <table class="data-table mb-0">
+        <thead>
           <tr>
-            <th class="border-0 fw-medium text-muted ps-4">ID</th>
-            <th class="border-0 fw-medium text-muted">Asunto</th>
-            <th class="border-0 fw-medium text-muted">Solicitante</th>
-            <th class="border-0 fw-medium text-muted">Estado</th>
-            <th class="border-0 fw-medium text-muted">Prioridad</th>
-            <th class="border-0 fw-medium text-muted">Creado</th>
-            <th class="border-0 fw-medium text-muted">Asignado</th>
-            <th class="border-0 fw-medium text-muted pe-4">Acciones</th>
+            <th class="text-center">ID</th>
+            <th class="text-start">Asunto</th>
+            <th class="text-start">Categoría</th>
+            <th class="text-start">Estado</th>
+            <th class="text-start">Prioridad</th>
+            <th class="text-start">Creador</th>
+            <th class="text-start">Asignado</th>
+            <th class="text-start">Creado</th>
+            <th class="text-center">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let ticket of tickets">
-            <td class="ps-4">
-              <code class="text-muted small">{{ ticket.id }}</code>
+          <tr *ngFor="let ticket of recentTickets" (click)="viewTicket(ticket.id)">
+            <td class="text-center">
+              <span class="ticket-id">TKT-{{ ticket.id }}</span>
             </td>
-            <td class="fw-medium">{{ ticket.subject }}</td>
-            <td>{{ ticket.requester }}</td>
             <td>
-              <span class="badge"
-                    [ngClass]="{
-                      'bg-danger': ticket.status === 'Abierto',
-                      'bg-warning text-dark': ticket.status === 'En progreso',
-                      'bg-success': ticket.status === 'Resuelto'
-                    }">
-                {{ ticket.status }}
+              <span class="fw-semibold">{{ ticket.title }}</span>
+            </td>
+            <td>
+              <span class="text-secondary">{{ ticket.category || '—' }}</span>
+            </td>
+            <td>
+              <span class="status-badge" [ngClass]="{
+                'status-open': ticket.status === 'OPEN',
+                'status-in-progress': ticket.status === 'IN_PROGRESS',
+                'status-waiting': ticket.status === 'WAITING_USER',
+                'status-resolved': ticket.status === 'RESOLVED',
+                'status-closed': ticket.status === 'CLOSED'
+              }">
+                {{ statusLabels[ticket.status] || ticket.status }}
               </span>
             </td>
             <td>
-              <span class="badge"
-                    [ngClass]="{
-                      'bg-danger': ticket.priority === 'Alta',
-                      'bg-warning text-dark': ticket.priority === 'Media',
-                      'bg-secondary': ticket.priority === 'Baja'
-                    }">
-                {{ ticket.priority }}
+              <span class="priority-badge" [ngClass]="{
+                'priority-low': ticket.priority === 'LOW',
+                'priority-medium': ticket.priority === 'MEDIUM',
+                'priority-high': ticket.priority === 'HIGH',
+                'priority-urgent': ticket.priority === 'URGENT'
+              }">
+                {{ priorityLabels[ticket.priority] || ticket.priority }}
               </span>
             </td>
-            <td class="text-muted small">{{ ticket.created }}</td>
-            <td>{{ ticket.assignee }}</td>
-            <td class="pe-4">
-              <div class="btn-group btn-group-sm">
-                <button class="btn btn-outline-secondary">
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <div class="avatar-sm">
+                  <i class="bi bi-person text-secondary"></i>
+                </div>
+                <span>{{ ticket.createdBy?.name || ticket.createdBy?.username || '—' }}</span>
+              </div>
+            </td>
+            <td>
+              <span *ngIf="ticket.assignedTo" class="d-flex align-items-center gap-2">
+                <div class="avatar-sm">
+                  <i class="bi bi-person-fill text-primary"></i>
+                </div>
+                <span>{{ ticket.assignedTo.name || ticket.assignedTo.username }}</span>
+              </span>
+              <span *ngIf="!ticket.assignedTo" class="text-muted fst-italic">Sin asignar</span>
+            </td>
+            <td>
+              <span class="text-secondary small">{{ ticket.createdAt | date:'dd/MM/yyyy' }}</span>
+            </td>
+            <td class="text-center">
+              <div class="d-flex gap-1 justify-content-center" (click)="$event.stopPropagation()">
+                <button class="icon-btn-sm" title="Ver detalle" (click)="viewTicket(ticket.id)">
                   <i class="bi bi-eye"></i>
                 </button>
-                <button class="btn btn-outline-secondary">
+                <button *ngIf="userRole !== 'USER'" class="icon-btn-sm" title="Editar" (click)="editTicket(ticket.id)">
                   <i class="bi bi-pencil"></i>
                 </button>
               </div>
+            </td>
+          </tr>
+          <tr *ngIf="recentTickets.length === 0">
+            <td colspan="9" class="text-center py-5 text-muted">
+              <i class="bi bi-ticket-detailed fs-2 d-block mb-2 opacity-25"></i>
+              No hay tickets recientes para mostrar.
             </td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
-</div>
+

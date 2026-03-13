@@ -1,90 +1,105 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../auth/services/auth.service';
+import { TicketService } from '../tickets/services/ticket.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent implements OnInit {
-  private authService = inject(AuthService);
-  private router = inject(Router);
+  public authService = inject(AuthService);
+  public ticketService = inject(TicketService);
+  public router = inject(Router);
+  public cdr = inject(ChangeDetectorRef);
 
   userName: string = 'Usuario';
   userRole: string = 'Admin';
 
-  statsCards = [
-    { label: 'Total de tickets', value: '154', change: '+12%' },
-    { label: 'Tickets abiertos', value: '45', change: '+5%' },
-    { label: 'Tickets resueltos', value: '102', change: '+8%' },
-    { label: 'Tiempo promedio', value: '2h 15m', change: '-15%' }
+  statsCards: any[] = [
+    { label: 'Total de tickets', value: '...', icon: 'bi-ticket-perforated', color: 'primary' },
+    { label: 'Tickets abiertos', value: '...', icon: 'bi-envelope-open', color: 'danger' },
+    { label: 'Tickets resueltos', value: '...', icon: 'bi-check2-circle', color: 'success' },
+    { label: 'Tiempo promedio', value: 'Prox.', icon: 'bi-clock-history', color: 'warning' }
   ];
 
-  tickets = [
-    {
-      id: '11A73E1',
-      subject: 'Problema con conexión a base de datos',
-      requester: 'Juan Pérez',
-      status: 'Abierto',
-      priority: 'Alta',
-      created: 'Hoy 8:00 PM',
-      assignee: 'María García'
-    },
-    {
-      id: '11A73E2',
-      subject: 'Error en módulo de autenticación',
-      requester: 'Ana López',
-      status: 'En progreso',
-      priority: 'Media',
-      created: 'Hoy 3:00 PM',
-      assignee: 'Carlos Rodríguez'
-    },
-    {
-      id: '11A73E3',
-      subject: 'Solicitud de nueva funcionalidad',
-      requester: 'Pedro Martínez',
-      status: 'Resuelto',
-      priority: 'Baja',
-      created: 'Hoy 7:30 PM',
-      assignee: 'Laura Sánchez'
-    },
-    {
-      id: '11A73E4',
-      subject: 'Problema de rendimiento en el panel',
-      requester: 'Sofia Ramírez',
-      status: 'Resuelto',
-      priority: 'Alta',
-      created: 'Hoy 7:30 PM',
-      assignee: 'Diego Torres'
-    },
-    {
-      id: '11A73E5',
-      subject: 'Configuración de servidor de correo',
-      requester: 'Miguel Herrera',
-      status: 'In Progress',
-      priority: 'Medium',
-      created: 'Hoy 8:30 PM',
-      assignee: 'Carmen Flores'
-    },
-  ];
+  recentTickets: any[] = [];
+
+  statusLabels: Record<string, string> = {
+    OPEN: 'Abierto',
+    IN_PROGRESS: 'En progreso',
+    WAITING_USER: 'Esperando usuario',
+    RESOLVED: 'Resuelto',
+    CLOSED: 'Cerrado'
+  };
+
+  priorityLabels: Record<string, string> = {
+    LOW: 'Baja',
+    MEDIUM: 'Media',
+    HIGH: 'Alta',
+    URGENT: 'Urgente'
+  };
 
   ngOnInit() {
-    const user = this.authService.getCurrentUser();
+    const user = this.authService.getUser();
+    console.log('Dashboard: User data from storage:', user);
     if (user) {
-      this.userName = user.name || user.email || 'Usuario';
+      if (user.role === 'USER') {
+        this.router.navigate(['/tickets']);
+        return;
+      }
+      this.userName = user.name || user.username || user.email || 'Usuario';
       this.userRole = user.role || 'Admin';
+      this.loadDashboardData();
     } else {
-      // Si no hay usuario, redirigir al login
       this.router.navigate(['/login']);
     }
   }
 
+  loadDashboardData() {
+    console.log('Cargando datos del dashboard...');
+    this.ticketService.getStats().subscribe({
+      next: (response) => {
+        console.log('Dashboard Stats Respuesta:', response);
+        const stats = response.data;
+        if (stats) {
+          this.statsCards = [
+            { label: 'Total de tickets', value: stats.total.toString(), icon: 'bi-ticket-perforated', color: 'primary' },
+            { label: 'Tickets abiertos', value: stats.open.toString(), icon: 'bi-envelope-open', color: 'danger' },
+            { label: 'Tickets resueltos', value: stats.resolved.toString(), icon: 'bi-check2-circle', color: 'success' },
+            { label: 'Tiempo promedio', value: 'Prox.', icon: 'bi-clock-history', color: 'warning' }
+          ];
+          this.cdr.detectChanges();
+        }
+      },
+      error: (err) => console.error('Error stats:', err)
+    });
+
+    this.ticketService.getTickets().subscribe({
+      next: (response) => {
+        console.log('Dashboard Tickets Respuesta:', response);
+        // El backend ya los devuelve ordenados por fecha descendente
+        this.recentTickets = (response.data || []).slice(0, 5);
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Error tickets:', err)
+    });
+  }
+
+  viewTicket(id: number) {
+    this.router.navigate(['/tickets', id]);
+  }
+
+  editTicket(id: number) {
+    this.router.navigate(['/tickets', id, 'edit']);
+  }
+
   logout() {
     this.authService.logout();
-    this.router.navigate(['/login']);
+    window.location.href = '/login';
   }
 }

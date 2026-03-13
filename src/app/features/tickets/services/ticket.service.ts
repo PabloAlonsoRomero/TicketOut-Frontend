@@ -27,10 +27,9 @@ export class TicketService {
     });
   }
 
-  // Obtiene la lista completa de tickets desde el backend
-  // Retorna un Observable con un array de tickets
-  getTickets(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl, { headers: this.getHeaders() });
+  getTickets(mine: boolean = false): Observable<any> {
+    const url = mine ? `${this.apiUrl}?mine=true` : this.apiUrl;
+    return this.http.get<any>(url, { headers: this.getHeaders() });
   }
 
   // Obtiene un ticket específico por su ID
@@ -45,5 +44,31 @@ export class TicketService {
   // Retorna un Observable con el objeto de estadísticas
   getStats(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/stats`, { headers: this.getHeaders() });
+  }
+
+  // Agrega un comentario a un ticket
+  addComment(ticketId: number, body: string, isInternal: boolean = false): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/${ticketId}/comments`, 
+      { body, isInternal }, 
+      { headers: this.getHeaders() }
+    );
+  }
+
+  // Crea un nuevo ticket
+  createTicket(ticket: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl, ticket, { headers: this.getHeaders() });
+  }
+
+  // Asigna un ticket a un usuario específico
+  assignTicket(ticketId: number, assignedToId: number): Observable<any> {
+    return this.http.patch<any>(`${this.apiUrl}/${ticketId}/assign`, 
+      { assignedToId }, 
+      { headers: this.getHeaders() }
+    );
+  }
+
+  // Actualiza un ticket existente
+  updateTicket(ticketId: number, data: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${ticketId}`, data, { headers: this.getHeaders() });
   }
 }
