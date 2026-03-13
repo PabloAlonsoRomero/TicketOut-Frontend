@@ -3,8 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { TicketService } from '../services/ticket.service';
+import { UserService } from '../../users/services/user.service';
 import { AuthService } from '../../auth/services/auth.service';
 import { Ticket, UpdateTicketRequest } from '../../../models/ticket-model';
+import { User } from '../../../models/user.model';
 import { TicketPriority, TicketStatus } from '../../../utils/ticket-enums';
 
 @Component({
@@ -16,12 +18,14 @@ import { TicketPriority, TicketStatus } from '../../../utils/ticket-enums';
 })
 export class TicketEditComponent implements OnInit {
   private ticketService = inject(TicketService);
+  private userService = inject(UserService);
   private authService = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
   ticket: Ticket | null = null;
   loading = true;
+  users: User[] = [];
 
   updateData: UpdateTicketRequest = {
     status: undefined,
@@ -64,6 +68,7 @@ export class TicketEditComponent implements OnInit {
   submitting = false;
 
   ngOnInit() {
+    this.loadUsers();
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       // TODO: restaurar cuando haya backend
@@ -134,6 +139,21 @@ export class TicketEditComponent implements OnInit {
     setTimeout(() => {
       this.router.navigate(['/tickets']);
     }, 500);
+  }
+
+  loadUsers() {
+    // TODO: restaurar cuando haya backend
+    // this.userService.getUsers().subscribe({
+    //   next: (data) => this.users = data,
+    //   error: (err) => console.error('Error al cargar usuarios:', err)
+    // });
+
+    // Datos temporales para pruebas visuales
+    this.users = [
+      { id: 1, username: 'jframe', email: 'john@test.com', name: 'John Frame', role: 'USER' as any, isActive: true, createdAt: '', updatedAt: '' },
+      { id: 2, username: 'mlopez', email: 'maria@test.com', name: 'María López', role: 'ADMIN' as any, isActive: true, createdAt: '', updatedAt: '' },
+      { id: 3, username: 'cgarcia', email: 'carlos@test.com', name: 'Carlos García', role: 'USER' as any, isActive: true, createdAt: '', updatedAt: '' }
+    ];
   }
 
   cancel() {

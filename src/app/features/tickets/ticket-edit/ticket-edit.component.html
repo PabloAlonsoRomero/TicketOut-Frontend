@@ -67,20 +67,37 @@
           </div>
         </div>
 
-        <!-- Category -->
-        <div class="form-group">
-          <label class="form-label" for="category">Categoría</label>
-          <select
-            id="category"
-            class="form-control-custom"
-            [(ngModel)]="updateData.category"
-            name="category"
-          >
-            <option value="">Sin categoría</option>
-            @for (cat of categories; track cat) {
-              <option [value]="cat">{{ cat }}</option>
-            }
-          </select>
+        <!-- Category & Assign Row -->
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label class="form-label" for="category">Categoría</label>
+            <select
+              id="category"
+              class="form-control-custom"
+              [(ngModel)]="updateData.category"
+              name="category"
+            >
+              <option value="">Sin categoría</option>
+              @for (cat of categories; track cat) {
+                <option [value]="cat">{{ cat }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group flex-1">
+            <label class="form-label" for="assignedTo">Asignar a</label>
+            <select
+              id="assignedTo"
+              class="form-control-custom"
+              [(ngModel)]="updateData.assignedToId"
+              name="assignedToId"
+            >
+              <option [ngValue]="null">Sin asignar</option>
+              @for (user of users; track user.id) {
+                <option [ngValue]="user.id">{{ user.name || user.username }}</option>
+              }
+            </select>
+          </div>
         </div>
 
         <!-- Description (readonly) -->

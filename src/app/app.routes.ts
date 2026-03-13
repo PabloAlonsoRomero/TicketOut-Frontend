@@ -5,6 +5,7 @@ import { TicketListComponent } from './features/tickets/ticket-list/ticket-list.
 import { TicketCreateComponent } from './features/tickets/ticket-create/ticket-create.component';
 import { TicketEditComponent } from './features/tickets/ticket-edit/ticket-edit.component';
 import { TicketDetailComponent } from './features/tickets/ticket-detail/ticket-detail.component';
+import { LogTableComponent } from './features/logs/log-table/log-table.component';
 import { MainLayout } from './layouts/main-layout/main-layout';
 
 export const routes: Routes = [
@@ -21,6 +22,7 @@ export const routes: Routes = [
       { path: 'tickets/create', component: TicketCreateComponent },
       { path: 'tickets/:id', component: TicketDetailComponent },
       { path: 'tickets/:id/edit', component: TicketEditComponent },
+      { path: 'reports', component: LogTableComponent },
     ]
   },
 ];
