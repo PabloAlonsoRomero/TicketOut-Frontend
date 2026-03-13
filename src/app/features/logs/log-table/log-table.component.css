@@ -20,20 +20,24 @@
   color: var(--ink-900);
 }
 
-.header-visual {
-  width: 44px;
-  height: 44px;
+.btn-export {
+  background: linear-gradient(135deg, var(--accent), #fb923c);
+  border: 0;
+  padding: 0.65rem 1.4rem;
   border-radius: 12px;
-  background: linear-gradient(135deg, var(--panel), var(--panel-soft));
+  font-weight: 700;
   color: #fff;
-  display: inline-flex;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.25);
+  display: flex;
   align-items: center;
-  justify-content: center;
-  box-shadow: 0 10px 20px rgba(11, 58, 83, 0.25); 
+  font-size: 0.9rem;
 }
 
-.header-visual i {
-  font-size: 1.15rem;
+.btn-export:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(249, 115, 22, 0.35);
 }
 
 .table-card {
