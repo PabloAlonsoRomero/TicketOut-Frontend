@@ -24,14 +24,15 @@ export class LoginComponent {
   onSubmit() {
     this.authService.login(this.loginData).subscribe({
       next: (response) => {
-        // Guardamos el token y perfil
+        // Guardamos las credenciales en el localstorage usando el authService
         if (response.token) {
+          console.log('Backend response on login:', response);
           this.authService.saveToken(response.token);
           this.authService.saveUser(response.user);
         }
-
-        // Redirigimos al dashboard (sin alerta)
-        this.router.navigate(['/dashboard']);
+        // Redirigimos según el rol con recarga completa para asegurar limpieza de estado
+        const targetRoute = response.user.role === 'USER' ? '/tickets' : '/dashboard';
+        window.location.href = targetRoute;
         console.log('Login success:', response);
       },
       error: (err) => {
