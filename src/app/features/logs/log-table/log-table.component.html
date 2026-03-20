@@ -4,18 +4,66 @@
     <h1 class="page-title h3 mb-1">Registro de Logs</h1>
     <p class="text-muted mb-0 small">Auditoria de sistema</p>
   </div>
-  <button class="btn-export">
-    <i class="bi bi-download me-2"></i>
-    Exportar Registro
-  </button>
+
 </div>
 
 <div class="table-card p-4 bg-white rounded-4 shadow-sm">
-  <div class="placeholder-box">
-    <i class="bi bi-tools placeholder-icon" aria-hidden="true"></i>
-    <h2 class="placeholder-title">Esta vista esta en desarrollo.</h2>
+  <div class="table-responsive" *ngIf="!loading && logs.length > 0">
+    <table class="data-table mb-0 w-100">
+      <thead>
+        <tr>
+          <th class="text-start">Fecha y Hora</th>
+          <th class="text-start">Ticket</th>
+          <th class="text-start">Autor</th>
+          <th class="text-start">Cambios Detallados</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let log of logs">
+          <td>
+            <span class="text-dark small fw-medium">{{ log.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          </td>
+          <td>
+            <span class="ticket-id">TKT-{{ log.ticketId }}</span>
+            <span class="ms-2 small text-muted text-truncate" style="max-width: 150px;">{{ log.ticket?.title }}</span>
+          </td>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <div class="avatar-sm" style="width: 24px; height: 24px; font-size: 0.7rem;">
+                <i class="bi bi-person"></i>
+              </div>
+              <span class="small">{{ log.actor?.name || log.actor?.username }}</span>
+            </div>
+          </td>
+          <td>
+            <span class="log-badge" [ngClass]="{
+              'log-created': log.type === 'TICKET_CREATED',
+              'log-status': log.type === 'STATUS_CHANGED',
+              'log-priority': log.type === 'PRIORITY_CHANGED',
+              'log-category': log.type === 'CATEGORY_CHANGED',
+              'log-assigned': log.type === 'ASSIGNED',
+              'log-comment': log.type === 'COMMENT_ADDED',
+              'log-closed': log.type === 'TICKET_CLOSED'
+            }">{{ formatEvent(log) }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Loading State -->
+  <div class="text-center py-5" *ngIf="loading">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="placeholder-box" *ngIf="!loading && logs.length === 0">
+    <i class="bi bi-journal-x placeholder-icon" aria-hidden="true"></i>
+    <h2 class="placeholder-title">No hay registros aún.</h2>
     <p class="placeholder-text mb-0">
-      Aqui se mostrara la tabla de logs con fecha y hora, ticket, autor y cambios detallados.
+      Las acciones que realicen los usuarios aparecerán aquí.
     </p>
   </div>
 </div>

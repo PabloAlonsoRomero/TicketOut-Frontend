@@ -67,11 +67,23 @@ export class DashboardComponent implements OnInit {
         console.log('Dashboard Stats Respuesta:', response);
         const stats = response.data;
         if (stats) {
+          // Formatear el tiempo promedio
+          let avgTimeStr = '0m';
+          const avgMinutes = stats.avgResolutionTimeMinutes || 0;
+          
+          if (avgMinutes < 60) {
+            avgTimeStr = `${avgMinutes}m`;
+          } else {
+            const hours = Math.floor(avgMinutes / 60);
+            const mins = avgMinutes % 60;
+            avgTimeStr = `${hours}h ${mins}m`;
+          }
+
           this.statsCards = [
             { label: 'Total de tickets', value: stats.total.toString(), icon: 'bi-ticket-perforated', color: 'primary' },
             { label: 'Tickets abiertos', value: stats.open.toString(), icon: 'bi-envelope-open', color: 'danger' },
             { label: 'Tickets resueltos', value: stats.resolved.toString(), icon: 'bi-check2-circle', color: 'success' },
-            { label: 'Tiempo promedio', value: 'Prox.', icon: 'bi-clock-history', color: 'warning' }
+            { label: 'Tiempo promedio', value: avgTimeStr, icon: 'bi-clock-history', color: 'warning' }
           ];
           this.cdr.detectChanges();
         }

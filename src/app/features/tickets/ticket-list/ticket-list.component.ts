@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TicketService } from '../services/ticket.service';
 import { AuthService } from '../../auth/services/auth.service';
@@ -18,6 +18,7 @@ export class TicketListComponent implements OnInit {
   private ticketService = inject(TicketService);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private cdr = inject(ChangeDetectorRef);
 
   tickets: Ticket[] = [];
@@ -55,14 +56,20 @@ export class TicketListComponent implements OnInit {
     if (user) {
       this.userName = user.name || user.email || 'Usuario';
       this.userRole = user.role || 'USER';
-      this.loadTickets(user.role === 'USER');
+      
+      // Suscribirse a cambios en los parámetros de la URL para búsqueda global
+      this.route.queryParams.subscribe(params => {
+        const query = params['search'] || '';
+        this.searchQuery = query;
+        this.loadTickets(this.userRole === 'USER', query);
+      });
     } else {
       this.router.navigate(['/login']);
     }
   }
 
-  loadTickets(mine: boolean = false) {
-    this.ticketService.getTickets(mine).subscribe({
+  loadTickets(mine: boolean = false, search: string = '') {
+    this.ticketService.getTickets(mine, search).subscribe({
       next: (response) => {
         // El backend devuelve un objeto { success: true, data: [...], pagination: {...} }
         this.tickets = response.data || [];
