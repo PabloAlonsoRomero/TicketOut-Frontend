@@ -2,42 +2,68 @@
   <div class="container-fluid">
     <div class="d-flex align-items-center justify-content-between py-2">
       <!-- Search Bar -->
-      <div class="d-flex align-items-center flex-grow-1 me-3" style="max-width: 400px;">
+      <div class="d-flex align-items-center flex-grow-1 me-3 position-relative" style="max-width: 400px;">
         <div class="input-group">
           <span class="input-group-text bg-light border-end-0">
-            <i class="bi bi-search text-muted"></i>
+            <i class="bi bi-search text-muted" *ngIf="!searching"></i>
+            <div class="spinner-border spinner-border-sm text-primary" role="status" *ngIf="searching">
+              <span class="visually-hidden">...</span>
+            </div>
           </span>
           <input type="text"
                  class="form-control bg-light border-start-0"
-                 placeholder="Buscador global (Próximamente...)"
-                 style="border-left: none; box-shadow: none; cursor: not-allowed;"
-                 disabled>
+                 placeholder="Buscar tickets (id, título) o usuarios..."
+                 style="border-left: none; box-shadow: none;"
+                 [value]="searchQuery"
+                 (input)="onInputChange($event)"
+                 #searchInput>
+        </div>
+
+        <!-- Search Results Dropdown -->
+        <div class="search-results-dropdown shadow-lg rounded-3 bg-white border" *ngIf="showResults">
+          <!-- Tickets Group -->
+          <div *ngIf="searchResults?.tickets?.length" class="result-group p-2">
+            <div class="text-uppercase small fw-bold text-muted px-2 mb-1" style="font-size: 0.65rem;">Tickets</div>
+            <div *ngFor="let t of searchResults?.tickets" 
+                 class="result-item d-flex align-items-center p-2 rounded cursor-pointer" 
+                 (click)="navigateToResult('ticket', t.id)">
+              <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 28px; height: 28px;">
+                <i class="bi bi-ticket-perforated" style="font-size: 0.85rem;"></i>
+              </div>
+              <div class="d-flex flex-column overflow-hidden">
+                <span class="text-dark fw-semibold small text-truncate">TKT-{{t.id}}: {{t.title}}</span>
+                <span class="text-muted" style="font-size: 0.7rem;">{{t.category}} • {{t.status}}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Users Group -->
+          <div *ngIf="searchResults?.users?.length" class="result-group p-2 border-top">
+            <div class="text-uppercase small fw-bold text-muted px-2 mb-1" style="font-size: 0.65rem;">Usuarios</div>
+            <div *ngFor="let u of searchResults?.users" 
+                 class="result-item d-flex align-items-center p-2 rounded cursor-pointer" 
+                 (click)="navigateToResult('user', u.id)">
+              <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 28px; height: 28px;">
+                <i class="bi bi-person-fill" style="font-size: 0.85rem;"></i>
+              </div>
+              <div class="d-flex flex-column overflow-hidden">
+                <span class="text-dark fw-semibold small text-truncate">{{u.name}}</span>
+                <span class="text-muted" style="font-size: 0.7rem;">@{{u.username}} • {{u.role}}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Actions -->
       <div class="d-flex align-items-center gap-3">
-        <!-- User Menu -->
-        <div class="dropdown">
-          <button class="btn btn-link text-decoration-none d-flex align-items-center p-0"
-                  type="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false">
-            <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-2"
-                 style="width: 32px; height: 32px;">
-              <i class="bi bi-person-fill text-primary"></i>
-            </div>
-            <span class="text-dark fw-medium">{{ userName }}</span>
-            <i class="bi bi-chevron-down ms-1 text-muted"></i>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item disabled text-muted" style="cursor: not-allowed;"><i class="bi bi-person me-2"></i>Perfil</a></li>
-            <li><a class="dropdown-item disabled text-muted" style="cursor: not-allowed;"><i class="bi bi-gear me-2"></i>Ajustes</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-danger" href="#" (click)="logout()">
-              <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
-            </a></li>
-          </ul>
+        <!-- User Info (Visual only) -->
+        <div class="d-flex align-items-center">
+          <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-2"
+               style="width: 32px; height: 32px;">
+            <i class="bi bi-person-fill text-primary"></i>
+          </div>
+          <span class="text-dark fw-medium">{{ userName }}</span>
         </div>
       </div>
     </div>
