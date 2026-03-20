@@ -47,13 +47,6 @@ export class Sidebar implements OnInit {
       route: '/logs',
       badge: null as string | null,
       disabled: false
-    },
-    {
-      label: 'Ajustes',
-      icon: 'bi-gear',
-      route: '/settings',
-      badge: null as string | null,
-      disabled: true
     }
   ];
 
@@ -66,9 +59,9 @@ export class Sidebar implements OnInit {
 
       // Filter based on role
       if (this.userRole === 'USER') {
-        // Users only see Tickets and Ajustes
+        // Users only see Tickets
         this.menuItems = this.menuItems.filter(item => 
-          item.label === 'Tickets' || item.label === 'Ajustes'
+          item.label === 'Tickets'
         );
       } else if (this.userRole === 'ADMIN') {
         // Admins see everything except Usuarios
