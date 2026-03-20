@@ -27,8 +27,12 @@ export class TicketService {
     });
   }
 
-  getTickets(mine: boolean = false): Observable<any> {
-    const url = mine ? `${this.apiUrl}?mine=true` : this.apiUrl;
+  getTickets(mine: boolean = false, search: string = ''): Observable<any> {
+    let url = mine ? `${this.apiUrl}?mine=true` : this.apiUrl;
+    if (search) {
+      const separator = url.includes('?') ? '&' : '?';
+      url += `${separator}search=${encodeURIComponent(search)}`;
+    }
     return this.http.get<any>(url, { headers: this.getHeaders() });
   }
 
@@ -44,6 +48,11 @@ export class TicketService {
   // Retorna un Observable con el objeto de estadísticas
   getStats(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/stats`, { headers: this.getHeaders() });
+  }
+
+  // Obtiene el historial de eventos (logs)
+  getLogs(page: number = 1): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/logs?page=${page}`, { headers: this.getHeaders() });
   }
 
   // Agrega un comentario a un ticket

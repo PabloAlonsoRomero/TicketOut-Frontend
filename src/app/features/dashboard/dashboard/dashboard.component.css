@@ -33,10 +33,11 @@
   background: var(--surface);
   border: 1px solid rgba(16, 24, 40, 0.06);
   border-radius: 16px;
-  padding: 1rem 1.5rem;
+  padding: 1.25rem 2rem;
   display: flex;
   align-items: center;
-  gap: 2.5rem;
+  justify-content: space-between;
+  gap: 1.5rem;
   margin-bottom: 1.5rem;
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
@@ -45,6 +46,7 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  flex: 1;
 }
 
 .indicator-icon-box {

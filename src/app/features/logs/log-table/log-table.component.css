@@ -71,3 +71,74 @@
   color: var(--ink-500);
   font-size: 0.95rem;
 }
+
+/* Data Table Styling */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table thead th {
+  padding: 1rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ink-500);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 2px solid var(--line-200);
+  white-space: nowrap;
+}
+
+.data-table tbody td {
+  padding: 1rem 0.75rem;
+  font-size: 0.95rem;
+  color: var(--ink-800);
+  border-bottom: 1px solid #f2f4f7;
+  vertical-align: middle;
+}
+
+.ticket-id {
+  font-weight: 700;
+  color: var(--panel-soft);
+  font-size: 0.9rem;
+  background: rgba(21, 82, 115, 0.05);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.avatar-sm {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--ink-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Custom Log Badges */
+.log-badge {
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.log-created { background: rgba(37, 99, 235, 0.1); color: #2563eb; }
+.log-status { background: rgba(147, 51, 234, 0.1); color: #9333ea; }
+.log-priority { background: rgba(249, 115, 22, 0.1); color: #f97316; }
+.log-category { background: rgba(107, 114, 128, 0.1); color: #4b5563; }
+.log-assigned { background: rgba(14, 165, 233, 0.1); color: #0ea5e9; }
+.log-comment { background: rgba(75, 85, 99, 0.1); color: #374151; }
+.log-closed { background: rgba(22, 163, 74, 0.1); color: #16a34a; }
+
+.text-truncate {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
